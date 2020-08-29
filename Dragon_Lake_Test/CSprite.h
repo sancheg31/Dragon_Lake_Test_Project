@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Utility.h"
+struct Size;
+struct Point;
 
+class Sprite;
 
 class CSprite
 {
@@ -16,7 +18,6 @@ public:
 
 
 private:
-	class Implementation;
-	Implementation* impl;
+	Sprite* sprite;
 };
 

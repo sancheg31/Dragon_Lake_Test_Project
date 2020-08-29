@@ -10,28 +10,15 @@ class CSpriteFactory
 {
 public:
 	
-	static CSpriteFactory* instance() {
-		static CSpriteFactory* instance_ = new CSpriteFactory();
-		return instance_;
-	}
+	static CSpriteFactory* instance();
 
-	std::shared_ptr<CSprite> getSprite(std::string spriteName) const {
-		return paths.find(spriteName)->second;
-	}
+	std::shared_ptr<CSprite> getSprite(std::string spriteName) const;
 
 private:
 
-	CSpriteFactory() {
-		initializePath();
-	}
+	CSpriteFactory();
 
-	void initializePath() {
-		paths.insert({ std::string("player"),	std::make_shared<CSprite>("/Framework/data/avatar.jpg") });
-		paths.insert({ std::string("bullet"), std::make_shared<CSprite>("/Framework/data/bullet.png") });
-		paths.insert({ std::string("circle"), std::make_shared<CSprite>("/Framework/data/circle.tga") });
-		paths.insert({ std::string("enemy"), std::make_shared<CSprite>("/Framework/data/enemy.png") });
-		paths.insert({ std::string("reticle"), std::make_shared<CSprite>("/Framework/data/reticle.png") });
-	}
+	static void initializePath();
 
 	CSpriteFactory(const CSpriteFactory&) = delete;
 	CSpriteFactory(CSpriteFactory&&) = delete;

@@ -2,6 +2,7 @@
 
 #include "Utility.h"
 #include "CSprite.h"
+#include "MapArea.h"
 
 #include <memory>
 
@@ -12,14 +13,12 @@ class GameObject
 {
 public:
 
-	GameObject(Point position) : mapPosition(position) { }
+	GameObject(const MapArea& area, Point position) : mapArea(area), mapPosition(position) { }
+	virtual ~GameObject() { }
 
-	void moveTo(Point position) {
-		mapPosition = position;
-	}
-
-	virtual void draw(const ScreenArea& area) const = 0;
+	virtual void moveTo(Point position) = 0;
 	virtual void advance(const MoveStrategy& strategy) = 0;
+	virtual void draw(const ScreenArea& area) const = 0;
 
 
 	Point position() const {
@@ -32,6 +31,9 @@ public:
 
 protected:
 	virtual std::shared_ptr<CSprite> getSprite() const = 0;
+	virtual bool isValidPosition(Point p) const = 0;
+
+	const MapArea& mapArea;
 	Point mapPosition{ 0, 0 };
 };
 

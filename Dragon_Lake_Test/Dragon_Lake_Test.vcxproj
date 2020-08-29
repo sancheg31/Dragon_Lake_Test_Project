@@ -146,16 +146,24 @@
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CSpriteFactory.cpp" />
     <ClCompile Include="Dragon_Lake_Test.cpp" />
-    <ClCompile Include="EntityObject.cpp" />
+    <ClCompile Include="EnemyObject.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="MapArea.cpp" />
     <ClCompile Include="MyFramework.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="ScreenArea.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CSpriteFactory.h" />
-    <ClInclude Include="EntityObject.h" />
+    <ClInclude Include="EnemyObject.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="MapArea.h" />
     <ClInclude Include="MyFramework.h" />
     <ClInclude Include="PlayerObject.h" />
+    <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="ScreenArea.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

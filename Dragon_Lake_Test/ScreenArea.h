@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Utility.h"
+#include "MapArea.h"
 
 
 class PlayerObject;
@@ -10,7 +11,7 @@ class PlayerObject;
 class ScreenArea
 {
 public:
-	ScreenArea(Size mapDim, Size screenDim);
+	ScreenArea(const MapArea& area, Size screenDim);
 
 	ScreenArea(const ScreenArea&) = default;
 	ScreenArea(ScreenArea&&) = default;
@@ -18,13 +19,16 @@ public:
 
 	Point calculateScreenShift(const PlayerObject& playerObject) const;
 
+	Point currentShift() const;
+
 	Size size() const;
 
 private:
 
-	mutable Point upLeftScreenVertex;
-	mutable Point currentPlayerPosition;
-	Size mapDimensions;
+	const MapArea& mapArea;
 	Size screenDimensions;
+	mutable Point upLeftScreenVertex{ 0, 0 };
+	mutable Point currentPlayerPosition{ 0, 0 };
+	
 };
 

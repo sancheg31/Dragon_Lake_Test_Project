@@ -5,35 +5,21 @@
 
 #include "Utility.h"
 
-class CSprite::Implementation
-{
-public:
-	Implementation(Sprite* spr) : sprite(spr) { 
-		getSpriteSize(sprite, size.width, size.height);
-	}
 
-	~Implementation() {
-		destroySprite(sprite);
-	}
-
-	Sprite* sprite;
-	Size size;
-};
-
-
-CSprite::CSprite(const char* path) {
-	impl = new Implementation(createSprite(path));
-}
+CSprite::CSprite(const char* path): sprite(createSprite(path)) { }
 
 void CSprite::draw(Point p) {
 	auto [x, y] = p;
-	drawSprite(impl->sprite, x, y);
+	drawSprite(sprite, x, y);
 }
 
 Size CSprite::size() const {
-	return impl->size;
+	int width, height;
+	getSpriteSize(sprite, width, height);
+	return Size{ width, height };
 }
 
 CSprite::~CSprite() {
-	delete impl;
+	destroySprite(sprite);
+	sprite = nullptr;
 }

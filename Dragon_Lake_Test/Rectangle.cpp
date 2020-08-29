@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "GameObject.h"
+
 struct Rectangle::Projection
 {
 	int first;
@@ -29,6 +31,9 @@ Rectangle::Rectangle(Point p, Size dim, VertexPosition position) {
 		break;
 	}
 }
+
+Rectangle::Rectangle(const GameObject& object) : Rectangle(object.position(), object.size(), VertexPosition::UP_LEFT) { }
+
 void Rectangle::constructFromUpperLeft(Point p, Size dimensions) {
 	upLeft_ = p;
 	downRight_ = Point{ p.x + dimensions.width, p.y + dimensions.height };

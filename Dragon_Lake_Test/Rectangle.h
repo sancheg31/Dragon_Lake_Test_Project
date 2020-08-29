@@ -3,6 +3,8 @@
 
 #include "Utility.h"
 
+class GameObject;
+
 enum class VertexPosition {
 	UP_RIGHT,
 	UP_LEFT,
@@ -15,6 +17,7 @@ class Rectangle
 public:
 
 	Rectangle(Point p, Size dim, VertexPosition position);
+	Rectangle(const GameObject& object);
 
 	Rectangle(const Rectangle&) = default;
 	Rectangle(Rectangle&&) = default;

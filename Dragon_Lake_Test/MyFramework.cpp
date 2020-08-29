@@ -1,36 +1,57 @@
 #include "MyFramework.h"
 
-MyFramework::MyFramework(Size wsize, Size msize, int enemy, int ammo) : windowSize(wsize), mapSize(msize), enemyCount(enemy), ammoAmount(ammo) { }
+#include <iostream>
+
+#include "Rectangle.h"
+#include "Utility.h"
+
+MyFramework::MyFramework(Size msize, Size wsize, int enemy, int ammo) : mapArea(msize), screenArea(mapArea, wsize), playerObject(mapArea, { 0, 0 }),
+	enemyCount(enemy), ammoAmount(ammo) {
+	enemyObjects.assign({ new EnemyObject{ mapArea, Point{20, 20} }, new EnemyObject{ mapArea, Point{400, 400} } });
+}
 
 void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
-	width = windowSize.width;
-	height = windowSize.height;
+	auto [width_, height_] = screenArea.size();
+	width = width_;
+	height = height_;
 	fullscreen = false;
 }
 
 bool MyFramework::Init() {
+	Rectangle screenRect(Point{ 0, 0 }, screenArea.size(), VertexPosition::UP_LEFT);
+	auto [cx, cy] = screenRect.center();
+	auto [px, py] = playerObject.size();
+	Point playerPosition{ cx - px / 2, cx - py / 2 };
+	playerObject.moveTo(playerPosition);
+
+	Point shift = screenArea.calculateScreenShift(playerObject);
+
 	showCursor(false);
-	player = new PlayerObject({ 0, 0 }, { 0, 0 });
-	auto [pwidth, pheight] = player->spriteSize();
-	Point startPoint{ windowSize.width / 2 - pwidth / 2, windowSize.height / 2 - pheight / 2 };
-	player->moveTo(startPoint);
 	return true;
 }
 
 void MyFramework::Close() {
-	delete player;
+	enemyObjects.clear();
 }
 
 bool MyFramework::Tick() {
 	drawTestBackground();
-	player->draw();
-	/*if (auto [x, y] = mouseSprite->size(); x > 0 && y > 0)
-		mouseSprite->draw();*/
+
+	Rectangle playerRect{ playerObject };
+	
+	for (auto& enemy : enemyObjects) {
+		Rectangle enemyRect{ *enemy };
+		if (playerRect.isCollide(enemyRect))
+			return true;
+		enemy->draw(screenArea);
+	}
+	playerObject.draw(screenArea);
+		
 	return false;
 }
 
 void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
-	//mouseSprite->move(Point{ x, y });
+
 }
 
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
@@ -38,11 +59,20 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 }
 
 void MyFramework::onKeyPressed(FRKey k) {
-	auto [x, y] = player->windowRelativePosition();
-	if (k == FRKey::RIGHT)
-		player->moveTo({ x + 10, y });
-	else if (k == FRKey::LEFT)
-		player->moveTo({ x - 10, y });
+	switch (k) {
+	case FRKey::LEFT:
+		playerObject.moveTo(playerObject.position() - Point{10, 0});
+		break;
+	case FRKey::RIGHT:
+		playerObject.moveTo(playerObject.position() + Point{ 10, 0 });
+		break;
+	case FRKey::UP:
+		playerObject.moveTo(playerObject.position() - Point{ 0, 10 });
+		break;
+	case FRKey::DOWN:
+		playerObject.moveTo(playerObject.position() + Point{ 0, 10 });
+		break;
+	}
 }
 
 void MyFramework::onKeyReleased(FRKey k) {

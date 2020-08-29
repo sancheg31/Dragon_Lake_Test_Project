@@ -1,10 +1,14 @@
 #pragma once
 
+#include <list>
 
 #include <Framework.h>
 
 #include "Utility.h"
+#include "ScreenArea.h"
 #include "PlayerObject.h"
+#include "EnemyObject.h"
+#include "MapArea.h"
 
 class MyFramework : public Framework 
 {
@@ -28,13 +32,14 @@ public:
 
 	virtual void onKeyReleased(FRKey k);
 private:
+	MapArea mapArea;
+	ScreenArea screenArea;
+	PlayerObject playerObject;
 
-	PlayerObject* player{ nullptr };
-
-	Size windowSize;
-	Size mapSize;
 	int enemyCount;
 	int ammoAmount;
+
+	std::list<EnemyObject*> enemyObjects;
 };
 
 
