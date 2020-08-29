@@ -33,8 +33,6 @@ public:
 	Point downRight() const;
 	Point downLeft() const;
 
-	
-
 private:
 
 	void constructFromUpperLeft(Point p, Size dimensions);
