@@ -5,9 +5,14 @@
 #include <Framework.h>
 
 #include "Utility.h"
+
 #include "ScreenArea.h"
 #include "PlayerObject.h"
+
 #include "EnemyObject.h"
+#include "CursorObject.h"
+#include "BulletObject.h"
+
 #include "MapArea.h"
 
 class MyFramework : public Framework 
@@ -35,11 +40,13 @@ private:
 	MapArea mapArea;
 	ScreenArea screenArea;
 	PlayerObject playerObject;
+	CursorObject cursorObject;
 
 	int enemyCount;
 	int ammoAmount;
 
 	std::list<EnemyObject*> enemyObjects;
+	std::list<BulletObject*> bulletObjects;
 };
 
 

@@ -143,8 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BulletObject.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CSpriteFactory.cpp" />
+    <ClCompile Include="CursorObject.cpp" />
     <ClCompile Include="Dragon_Lake_Test.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -155,8 +157,10 @@
     <ClCompile Include="ScreenArea.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BulletObject.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CSpriteFactory.h" />
+    <ClInclude Include="CursorObject.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MapArea.h" />

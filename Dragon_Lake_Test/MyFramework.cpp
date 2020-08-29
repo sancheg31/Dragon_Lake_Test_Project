@@ -5,8 +5,8 @@
 #include "Rectangle.h"
 #include "Utility.h"
 
-MyFramework::MyFramework(Size msize, Size wsize, int enemy, int ammo) : mapArea(msize), screenArea(mapArea, wsize), playerObject(mapArea, { 0, 0 }),
-	enemyCount(enemy), ammoAmount(ammo) {
+MyFramework::MyFramework(Size msize, Size wsize, int enemy, int ammo) : mapArea(msize), screenArea(mapArea, wsize), playerObject(mapArea, { 0, 0 }), 
+		cursorObject(mapArea, {-1, -1}), enemyCount(enemy), ammoAmount(ammo) {
 	enemyObjects.assign({ new EnemyObject{ mapArea, Point{20, 20} }, new EnemyObject{ mapArea, Point{400, 400} } });
 }
 
@@ -43,19 +43,63 @@ bool MyFramework::Tick() {
 		Rectangle enemyRect{ *enemy };
 		if (playerRect.isCollide(enemyRect))
 			return true;
-		enemy->draw(screenArea);
 	}
 	playerObject.draw(screenArea);
-		
+	cursorObject.draw(screenArea);
+
+	for (auto& enemy : enemyObjects);
+		//enemy->advance(screenArea);
+	for (auto& bullet : bulletObjects);
+		//bullet->advance(screenArea);
+
+	for (auto bulletIter = bulletObjects.begin(); bulletIter != bulletObjects.end(); ) {
+		Rectangle bulletRect{ **bulletIter };
+		bool isErased = false;
+		for (auto enemyIter = enemyObjects.begin(); enemyIter != enemyObjects.end(); ) {
+			Rectangle enemyRect{ **enemyIter };
+			if (bulletRect.isCollide(enemyRect)) {
+				enemyIter = enemyObjects.erase(enemyIter);
+				isErased = true;
+			}
+			else {
+				++enemyIter;
+			}
+		}
+		if (isErased) {
+			bulletIter = bulletObjects.erase(bulletIter);
+		}
+		else {
+			++bulletIter;
+		}
+	}
+
+	for (auto& enemy : enemyObjects)
+		enemy->draw(screenArea);
+	for (auto& bullet : bulletObjects)
+		bullet->draw(screenArea);
+
 	return false;
 }
 
 void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
-
+	cursorObject.moveTo(Point{ x, y });
 }
 
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
-
+	if (!isReleased) {
+		switch (button) {
+		case FRMouseButton::LEFT: {
+				auto bullet = new BulletObject{ mapArea, {0, 0} };
+				auto [cx, cy] = Rectangle{ cursorObject }.center();
+				auto [bwidth, bheight] = bullet->size();
+				bullet->moveTo(Point{ cx - bwidth / 2, cy - bheight / 2 });
+				bulletObjects.push_back(bullet);
+				if (bulletObjects.size() > ammoAmount)
+					bulletObjects.erase(bulletObjects.begin());
+				break;
+			}
+		}
+	}
 }
 
 void MyFramework::onKeyPressed(FRKey k) {
