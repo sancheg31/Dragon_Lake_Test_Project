@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <memory>
 
 #include "CSprite.h"
 
@@ -14,27 +15,29 @@ public:
 		return instance_;
 	}
 
-	CSprite* createSprite(std::string spriteName) {
-		return new CSprite(paths.find(spriteName)->second);
+	std::shared_ptr<CSprite> getSprite(std::string spriteName) const {
+		return paths.find(spriteName)->second;
 	}
 
 private:
 
-	CSpriteFactory() { }
+	CSpriteFactory() {
+		initializePath();
+	}
+
+	void initializePath() {
+		paths.insert({ std::string("player"),	std::make_shared<CSprite>("/Framework/data/avatar.jpg") });
+		paths.insert({ std::string("bullet"), std::make_shared<CSprite>("/Framework/data/bullet.png") });
+		paths.insert({ std::string("circle"), std::make_shared<CSprite>("/Framework/data/circle.tga") });
+		paths.insert({ std::string("enemy"), std::make_shared<CSprite>("/Framework/data/enemy.png") });
+		paths.insert({ std::string("reticle"), std::make_shared<CSprite>("/Framework/data/reticle.png") });
+	}
 
 	CSpriteFactory(const CSpriteFactory&) = delete;
 	CSpriteFactory(CSpriteFactory&&) = delete;
 	~CSpriteFactory() = default;
 
-	static std::map<std::string, char*> paths;
+	static std::map<std::string, std::shared_ptr<CSprite>> paths;
 	
 };
-
-std::map<std::string, char*> CSpriteFactory::paths	{ 	
-														{std::string("player"),	(char*)"/Framework/data/avatar.jpg"},
-														{std::string("bullet"), (char*)"/Framework/data/bullet.png" },
-														{std::string("circle"), (char*)"/Framework/data/circle.tga" },
-														{std::string("bullet"), (char*)"/Framework/data/enemy.png" },
-														{std::string("bullet"), (char*)"/Framework/data/reticle.png" } 
-													};
 
