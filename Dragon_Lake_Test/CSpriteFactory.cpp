@@ -3,15 +3,16 @@
 std::map<std::string, std::shared_ptr<CSprite>> CSpriteFactory::paths = {};
 bool CSpriteFactory::created = false;
 
-CSpriteFactory::CSpriteFactory() {
+std::shared_ptr<CSprite> CSpriteFactory::getSprite(std::string spriteName) const {
 	if (!created) {
 		initializePaths();
 		created = true;
 	}
+	return paths.find(spriteName)->second;
 }
 
-std::shared_ptr<CSprite> CSpriteFactory::getSprite(std::string spriteName) const {
-	return paths.find(spriteName)->second;
+void CSpriteFactory::addSprite(const std::string& key, const char* path) {
+	paths.insert({ key, std::make_shared<CSprite>(path) });
 }
 
 void CSpriteFactory::initializePaths() {

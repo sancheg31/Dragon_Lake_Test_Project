@@ -10,14 +10,16 @@ class CSpriteFactory
 {
 public:
 
-	CSpriteFactory();
+	CSpriteFactory() = default;
+	CSpriteFactory(const CSpriteFactory&) = default;
+	CSpriteFactory(CSpriteFactory&&) = default;
+	~CSpriteFactory() = default;
+
 	std::shared_ptr<CSprite> getSprite(std::string spriteName) const;
+	void addSprite(const std::string& key, const char* path);
+
 
 private:
-
-	CSpriteFactory(const CSpriteFactory&) = delete;
-	CSpriteFactory(CSpriteFactory&&) = delete;
-	~CSpriteFactory() = default;
 
 	static void initializePaths();
 
