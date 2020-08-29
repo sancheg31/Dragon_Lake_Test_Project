@@ -1,39 +1,42 @@
 #pragma once
 
 #include "Utility.h"
-#include "CSprite.h"
-#include "MapArea.h"
 
 #include <memory>
 
 class ScreenArea;
+class MapArea;
+
 class MoveStrategy;
+
+class CSprite;
+class CSpriteFactory;
+
 
 class GameObject
 {
 public:
 
-	GameObject(const MapArea& area, Point position) : mapArea(area), mapPosition(position) { }
-	virtual ~GameObject() { }
+	GameObject(std::shared_ptr<MapArea> area, Point position);
+	GameObject(const GameObject&) = default;
+	GameObject(GameObject&&) = default;
+	GameObject& operator=(const GameObject&) = default;
+	GameObject& operator=(GameObject&&) = default;
+	virtual ~GameObject() = default;
 
 	virtual void moveTo(Point position) = 0;
-	virtual void advance(const MoveStrategy& strategy) = 0;
 	virtual void draw(const ScreenArea& area) const = 0;
 
-
-	Point position() const {
-		return mapPosition;
-	}
-
-	Size size() const {
-		return getSprite()->size();
-	}
+	Point position() const;
+	Size size() const;
 
 protected:
 	virtual std::shared_ptr<CSprite> getSprite() const = 0;
 	virtual bool isValidPosition(Point p) const = 0;
 
-	const MapArea& mapArea;
+	static std::unique_ptr<CSpriteFactory> spriteCreator;
+
+	std::shared_ptr<MapArea> mapArea;
 	Point mapPosition{ 0, 0 };
 };
 
