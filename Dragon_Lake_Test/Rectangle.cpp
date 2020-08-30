@@ -1,6 +1,5 @@
-#include "Rectangle.h"
 
-#include <utility>
+#include "Rectangle.h"
 
 #include "GameObject.h"
 
@@ -10,7 +9,7 @@ struct Rectangle::Projection
 	int second;
 
 	bool isValueBetween(int val) {
-		auto [less, bigger] = (first < second) ? std::pair{ first, second } : std::pair{ second, first };
+		auto [less, bigger] = (first < second) ? Point{ first, second } : Point{ second, first };
 		return val >= less && val <= bigger;
 	}
 };

@@ -1,4 +1,7 @@
+
 #include "CSpriteFactory.h"
+
+#include "CSprite.h"
 
 std::map<std::string, std::shared_ptr<CSprite>> CSpriteFactory::paths = {};
 bool CSpriteFactory::created = false;

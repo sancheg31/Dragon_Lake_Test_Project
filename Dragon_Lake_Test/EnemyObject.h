@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 
+struct Point;
+
 class EnemyObject : public GameObject
 {
 public:
@@ -9,7 +11,7 @@ public:
 	virtual ~EnemyObject();
 	
 	virtual void moveTo(Point position);
-
+	void advance();
 	virtual void draw(const ScreenArea& area) const override;
 
 protected:

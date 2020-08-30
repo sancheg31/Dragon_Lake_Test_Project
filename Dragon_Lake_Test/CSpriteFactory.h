@@ -4,7 +4,9 @@
 #include <string>
 #include <memory>
 
-#include "CSprite.h"
+class CSprite;
+
+struct Size;
 
 class CSpriteFactory
 {
@@ -17,7 +19,6 @@ public:
 
 	std::shared_ptr<CSprite> getSprite(std::string spriteName) const;
 	void addSprite(const std::string& key, const char* path);
-
 
 private:
 

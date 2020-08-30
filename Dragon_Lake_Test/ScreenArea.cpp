@@ -2,29 +2,30 @@
 
 #include "PlayerObject.h"
 #include "Rectangle.h"
+#include "MapArea.h"
 
 #include <iostream>
 
-ScreenArea::ScreenArea(const MapArea& area, Size screenDim) : mapArea(area), screenDimensions(screenDim) { }
+ScreenArea::ScreenArea(std::shared_ptr<MapArea> area, Size screenDim) : mapArea(area), screenDimensions(screenDim) { }
 
 Point ScreenArea::calculateScreenShift(const PlayerObject& playerObject) const {
 	if (currentPlayerPosition != playerObject.position()) {
 
 		currentPlayerPosition = playerObject.position();
 
-		Rectangle playerRectangle{ playerObject.position(), playerObject.size(), VertexPosition::UP_LEFT };
+		Rectangle playerRectangle{ playerObject };
 		Point centerPlayer = playerRectangle.center();
 
 		upLeftScreenVertex = Point{ centerPlayer.x - screenDimensions.width / 2, centerPlayer.y - screenDimensions.height / 2 };
+		Point downRightScreenVertex = Point{ centerPlayer.x + screenDimensions.width / 2, centerPlayer.y + screenDimensions.height / 2 };
 
 		if (upLeftScreenVertex.x < 0) {
 			upLeftScreenVertex.x = 0;
 		}if (upLeftScreenVertex.y < 0) {
 			upLeftScreenVertex.y = 0;
 		}
-
-		Point downRightScreenVertex = Point{ centerPlayer.x + screenDimensions.width / 2, centerPlayer.y + screenDimensions.height / 2 };
-		Size mapDimensions = mapArea.size();
+		
+		Size mapDimensions = mapArea->size();
 
 		if (downRightScreenVertex.x > mapDimensions.width) {
 			upLeftScreenVertex.x = mapDimensions.width - screenDimensions.width;

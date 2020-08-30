@@ -7,11 +7,8 @@
 class ScreenArea;
 class MapArea;
 
-class MoveStrategy;
-
 class CSprite;
 class CSpriteFactory;
-
 
 class GameObject
 {
@@ -29,6 +26,8 @@ public:
 
 	Point position() const;
 	Size size() const;
+
+	static void setSpriteCreator(CSpriteFactory* factory);
 
 protected:
 	virtual std::shared_ptr<CSprite> getSprite() const = 0;

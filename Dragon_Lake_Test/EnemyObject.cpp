@@ -4,8 +4,12 @@
 #include "CSprite.h"
 #include "CSpriteFactory.h"
 #include "ScreenArea.h"
+#include "MapArea.h"
 
-EnemyObject::EnemyObject(std::shared_ptr<MapArea> area, Point startPosition) : GameObject(area, startPosition) { }
+#include "Utility.h"
+
+EnemyObject::EnemyObject(std::shared_ptr<MapArea> area, Point startPosition) : 
+	GameObject(area, startPosition) { }
 
 EnemyObject::~EnemyObject() { }
 
@@ -13,6 +17,10 @@ EnemyObject::~EnemyObject() { }
 	if (isValidPosition(position))
 		mapPosition = position;
 }
+
+ void EnemyObject::advance() {
+
+ }
 
 void EnemyObject::draw(const ScreenArea& area) const {
 	auto sprite = getSprite();

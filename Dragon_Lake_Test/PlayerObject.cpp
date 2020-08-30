@@ -4,6 +4,7 @@
 #include "CSprite.h"
 #include "CSpriteFactory.h"
 #include "ScreenArea.h"
+#include "MapArea.h"
 
 PlayerObject::PlayerObject(std::shared_ptr<MapArea> area, Point startPosition) : GameObject(area, startPosition) { }
 
