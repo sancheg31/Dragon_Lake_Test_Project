@@ -41,7 +41,6 @@ protected:
 
 	std::shared_ptr<MapArea> mapArea;
 	std::shared_ptr<ScreenArea> screenArea;
-	Point mapUpperLeft{ 0, 0 };
-	Point screenUpperLeft{ 0, 0 };
+	Point position{ 0, 0 };
 };
 
