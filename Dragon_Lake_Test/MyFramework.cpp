@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Rectangle.h"
+#include "SegmentPixelEngine.h"
 
 
 MyFramework::MyFramework(GameObjectFactory* factory, std::shared_ptr<MapArea> marea, ScreenArea sarea, int enemy, int ammo) : 
@@ -17,6 +18,9 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 }
 
 bool MyFramework::Init() {
+
+	engine = new SegmentPixelEngine();
+
 	Rectangle screenRect(Point{ 0, 0 }, screenArea.size(), VertexPosition::UP_LEFT);
 
 	playerObject = objectFactory->createPlayerObject(Point{ 0, 0 });
@@ -41,16 +45,16 @@ void MyFramework::Close() {
 	delete playerObject;
 	delete cursorObject;
 	delete objectFactory;
+	delete engine;
 
 	enemyObjects.clear();
-	bulletObjects.clear();
 }
 
 bool MyFramework::Tick() {
 	drawTestBackground();
 	screenArea.calculateScreenShift(*playerObject);
 	Rectangle playerRect{ *playerObject };
-	
+
 	for (auto& enemy : enemyObjects) {
 		Rectangle enemyRect{ *enemy };
 		if (playerRect.isCollide(enemyRect))
@@ -58,39 +62,17 @@ bool MyFramework::Tick() {
 	}
 
 	playerObject->draw(screenArea);
-
-	for (auto& bullet : bulletObjects)
-		bullet->advance();
-	for (auto& enemy : enemyObjects)
-		enemy->advance();
-
-	for (auto bulletIter = bulletObjects.begin(); bulletIter != bulletObjects.end(); ) {
-		Rectangle bulletRect{ **bulletIter };
-		bool isErased = false;
-		for (auto enemyIter = enemyObjects.begin(); enemyIter != enemyObjects.end(); ) {
-			Rectangle enemyRect{ **enemyIter };
-			if (bulletRect.isCollide(enemyRect)) {
-				enemyIter = enemyObjects.erase(enemyIter);
-				isErased = true;
-			}
-			else {
-				++enemyIter;
-			}
-		}
-		if (isErased) {
-			bulletIter = bulletObjects.erase(bulletIter);
-		}
-		else {
-			++bulletIter;
-		}
-	}
+	cursorObject->draw(screenArea);
 
 	for (auto& enemy : enemyObjects)
 		enemy->draw(screenArea);
-	for (auto& bullet : bulletObjects)
-		bullet->draw(screenArea);
 
-	cursorObject->draw(screenArea);
+	if (bullet) {
+		auto point = engine->next();
+		std::cout << "Point is: " << point.x << " " << point.y << '\n';
+		bullet->moveTo(point);
+		bullet->draw(screenArea);
+	}
 
 	return false;
 }
@@ -101,15 +83,29 @@ void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
 
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 	if (!isReleased) {
+
+		bullet = objectFactory->createBulletObject(Point{ 0, 0 }, Point{ 0, 0 });
+
 		Point startPoint = Rectangle{ *playerObject }.center();
 		auto [cx, cy] = cursorObject->position();
-		auto [bwidth, bheight] = cursorObject->size();
-		Point cursorPoint = Point{ cx + bwidth / 2, cy + bheight / 2 };
-
-		bulletObjects.push_back(objectFactory->createBulletObject(startPoint, cursorPoint));
-		if (bulletObjects.size() > ammoAmount)
-			bulletObjects.erase(bulletObjects.begin());
+		auto [cwidth, cheight] = cursorObject->size();
+		auto [bwidth, bheight] = bullet->size();
+		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
+		cursorPoint = direct(startPoint, cursorPoint);
+		engine->setSegment(Line{ startPoint, cursorPoint }, 8);
+		
 	}
+}
+Point MyFramework::direct(Point start, Point end) {
+	Point Point = end;
+	int incX = Point.x - start.x;
+	int incY = Point.y - start.y;
+	auto [width, height] = mapArea->size();
+	while ((Point.x <= width) && ((Point.y <= height)) && (Point.x >= 0) && ((Point.y >= 0))) {
+		Point.x += incX;
+		Point.y += incY;
+	}
+	return Point;
 }
 
 void MyFramework::onKeyPressed(FRKey k) {

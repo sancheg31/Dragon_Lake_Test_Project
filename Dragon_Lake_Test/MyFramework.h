@@ -16,6 +16,8 @@
 #include "BulletObject.h"
 #include "GameObjectFactory.h"
 
+#include "SegmentPixelEngine.h"
+
 class MyFramework : public Framework 
 {
 public:
@@ -37,6 +39,8 @@ public:
 	virtual void onKeyPressed(FRKey k);
 
 	virtual void onKeyReleased(FRKey k);
+
+	Point direct(Point start, Point end);
 private:
 
 	GameObjectFactory* objectFactory;
@@ -44,12 +48,14 @@ private:
 	ScreenArea screenArea;
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
+	SegmentPixelEngine* engine;
 
 	int enemyCount;
 	int ammoAmount;
 
 	std::list<EnemyObject*> enemyObjects;
-	std::list<BulletObject*> bulletObjects;
+	
+	BulletObject* bullet;
 };
 
 

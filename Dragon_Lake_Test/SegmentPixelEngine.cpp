@@ -2,6 +2,7 @@
 #include "SegmentPixelEngine.h"
 
 #include <algorithm>
+#include <iostream>
 
 void SegmentPixelEngine::setSegment(Line line, int precision) {
 	Point startPoint = line.start;

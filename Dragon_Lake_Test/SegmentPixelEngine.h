@@ -4,7 +4,7 @@
 
 template <typename T>
 T sign(T val) {
-	return (T(0) > val) - (T(0) < val);
+	return (T(0) < val) - (T(0) > val);
 }
 
 class SegmentPixelEngine {
