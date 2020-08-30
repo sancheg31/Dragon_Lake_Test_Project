@@ -6,19 +6,31 @@
 #include "ScreenArea.h"
 #include "MapArea.h"	
 
-CursorObject::CursorObject(std::shared_ptr<MapArea> area, Point startPosition) : GameObject(area, startPosition) { }
+CursorObject::CursorObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea) : GameObject(marea, sarea) { }
 
 CursorObject::~CursorObject() { }
 
-void CursorObject::moveTo(Point position) {
-	mapPosition = position;
+void CursorObject::move(Point pos) {
+	if (isValidPosition(position - pos))
+		position = position + pos;
 }
 
-void CursorObject::draw(const ScreenArea& area) const {
-	if (isValidPosition(mapPosition)) {
-		auto sprite = getSprite();
-		sprite->draw(mapPosition - area.currentShift());
-	}
+void CursorObject::setPosition(Point pos) {
+	if (isValidPosition(pos))
+		position = pos;
+}
+
+void CursorObject::draw() const {
+	auto sprite = getSprite();
+	sprite->draw(screenPosition());
+}
+
+Point CursorObject::mapPosition() const {
+	return position + screenArea->currentShift();
+}
+
+Point CursorObject::screenPosition() const {
+	return position;
 }
 
 std::shared_ptr<CSprite> CursorObject::getSprite() const {

@@ -18,7 +18,6 @@ public:
 protected:
 
 	virtual std::shared_ptr<CSprite> getSprite() const override;
-
 	virtual bool isValidPosition(Point p) const override;
 
 };
