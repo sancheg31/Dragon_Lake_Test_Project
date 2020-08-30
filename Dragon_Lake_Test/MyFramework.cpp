@@ -69,7 +69,6 @@ bool MyFramework::Tick() {
 
 	if (bullet) {
 		auto point = engine->next();
-		std::cout << "Point is: " << point.x << " " << point.y << '\n';
 		bullet->moveTo(point);
 		bullet->draw(screenArea);
 	}
@@ -79,6 +78,7 @@ bool MyFramework::Tick() {
 
 void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
 	cursorObject->moveTo(Point{ x, y });
+	std::cout << xrelative << " " << yrelative << '\n';
 }
 
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
@@ -91,9 +91,10 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		auto [cwidth, cheight] = cursorObject->size();
 		auto [bwidth, bheight] = bullet->size();
 		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
+		std::cout << "Start Point: " << startPoint.x << " " << startPoint.y << '\n';
+		std::cout << "Cursor Point: " << cursorPoint.x << " " << cursorPoint.y << '\n';
 		cursorPoint = direct(startPoint, cursorPoint);
 		engine->setSegment(Line{ startPoint, cursorPoint }, 8);
-		
 	}
 }
 Point MyFramework::direct(Point start, Point end) {

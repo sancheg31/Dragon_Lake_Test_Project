@@ -23,7 +23,7 @@ void BulletObject::advance() {
 void BulletObject::draw(const ScreenArea& area) const {
 	if (isValidPosition(mapPosition)) {
 		auto sprite = getSprite();
-		sprite->draw(mapPosition);
+		sprite->draw(mapPosition - area.currentShift());
 	}
 }
 
