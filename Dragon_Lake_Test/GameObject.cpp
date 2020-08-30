@@ -8,17 +8,19 @@
 
 std::unique_ptr<CSpriteFactory> GameObject::spriteCreator = nullptr;
 
-GameObject::GameObject(std::shared_ptr<MapArea> area, Point position) : mapArea(area), mapPosition(position) { }
-
-Point GameObject::position() const {
-	return mapPosition;
-}
+GameObject::GameObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea) 
+	: mapArea(marea), screenArea(sarea) { }
 
 Size GameObject::size() const {
 	return getSprite()->size();
 }
 
-void GameObject::setSpriteCreator(CSpriteFactory* factory) {
+/*static*/ void GameObject::setSpriteCreator(CSpriteFactory* factory) {
 	spriteCreator.reset(factory);
 }
+
+/*static*/ CSpriteFactory* GameObject::releaseSpriteCreator() {
+	return spriteCreator.release();
+}
+
 

@@ -14,20 +14,24 @@ class GameObject
 {
 public:
 
-	GameObject(std::shared_ptr<MapArea> area, Point position);
+	GameObject(std::shared_ptr<MapArea> mapArea, std::shared_ptr<ScreenArea> screenArea);
 	GameObject(const GameObject&) = default;
 	GameObject(GameObject&&) = default;
 	GameObject& operator=(const GameObject&) = default;
 	GameObject& operator=(GameObject&&) = default;
 	virtual ~GameObject() = default;
 
-	virtual void moveTo(Point position) = 0;
-	virtual void draw(const ScreenArea& area) const = 0;
+	virtual void move(Point position) = 0;
+	virtual void draw() const = 0;
+	virtual void setPosition(Point p) = 0;
 
-	Point position() const;
+	virtual Point mapPosition() const = 0;
+	virtual Point screenPosition() const = 0;
+
 	Size size() const;
 
 	static void setSpriteCreator(CSpriteFactory* factory);
+	static CSpriteFactory* releaseSpriteCreator();
 
 protected:
 	virtual std::shared_ptr<CSprite> getSprite() const = 0;
@@ -36,6 +40,8 @@ protected:
 	static std::unique_ptr<CSpriteFactory> spriteCreator;
 
 	std::shared_ptr<MapArea> mapArea;
-	Point mapPosition{ 0, 0 };
+	std::shared_ptr<ScreenArea> screenArea;
+	Point mapUpperLeft{ 0, 0 };
+	Point screenUpperLeft{ 0, 0 };
 };
 
