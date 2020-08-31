@@ -1,6 +1,6 @@
 #pragma once
 
-struct LinearTrajectoryGenerator;
+class LinearTrajectoryGenerator;
 struct Point;
 
 class Advanceable

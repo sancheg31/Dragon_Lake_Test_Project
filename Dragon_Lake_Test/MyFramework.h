@@ -40,7 +40,7 @@ public:
 
 	virtual void onKeyReleased(FRKey k);
 
-	Point direct(Point start, Point end);
+	Point findEndPoint(Point start, Point end);
 private:
 
 	GameObjectFactory* objectFactory;
@@ -48,14 +48,12 @@ private:
 	std::shared_ptr<ScreenArea> screenArea;
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
-	LinearTrajectoryGenerator* trajectory;
 
 	int enemyCount;
 	int ammoAmount;
 
 	std::list<EnemyObject*> enemyObjects;
-	
-	BulletObject* bullet;
+	std::list<BulletObject*> bulletObjects;
 };
 
 

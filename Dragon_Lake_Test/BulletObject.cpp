@@ -62,7 +62,5 @@ std::shared_ptr<CSprite> BulletObject::getSprite() const {
 }
 
 bool BulletObject::isValidPosition(Point p) const {
-	auto [width, height] = mapArea->size();
-	auto [objw, objh] = size();
-	return (p.x >= 0 && p.y >= 0 && p.x <= width - objw && p.y <= height - objh);
+	return true;
 }

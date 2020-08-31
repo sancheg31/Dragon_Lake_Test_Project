@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Advanceable.cpp" />
     <ClCompile Include="BulletObject.cpp" />
     <ClCompile Include="CollisionChecker.cpp" />
     <ClCompile Include="CSprite.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="LinearTrajectoryGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Advanceable.h" />
     <ClInclude Include="BulletObject.h" />
     <ClInclude Include="CollisionChecker.h" />
     <ClInclude Include="CSprite.h" />

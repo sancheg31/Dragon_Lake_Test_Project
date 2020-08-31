@@ -19,8 +19,6 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 
 bool MyFramework::Init() {
 
-	trajectory = new LinearTrajectoryGenerator();
-
 	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
 	playerObject = objectFactory->createPlayerObject();
@@ -50,14 +48,8 @@ bool MyFramework::Init() {
 }
 
 void MyFramework::Close() {
-	
 	GameObject::releaseResources();
-	delete playerObject;
-	delete cursorObject;
-	delete objectFactory;
-	delete trajectory;
-	
-
+	bulletObjects.clear();
 	enemyObjects.clear();
 }
 
@@ -77,9 +69,8 @@ bool MyFramework::Tick() {
 	for (auto& enemy : enemyObjects)
 		enemy->draw();
 
-	if (bullet) {
-		auto point = trajectory->next();
-		bullet->setPosition(point);
+	for (auto& bullet : bulletObjects) {
+		bullet->advance();
 		bullet->draw();
 	}
 
@@ -93,21 +84,32 @@ void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 	if (!isReleased) {
 
-		bullet = objectFactory->createBulletObject();
-
+		auto bullet = objectFactory->createBulletObject();
+		
 		Point startPoint = Rectangle{ *playerObject }.center();
 		auto [cx, cy] = cursorObject->mapPosition();
 		auto [cwidth, cheight] = cursorObject->size();
 		auto [bwidth, bheight] = bullet->size();
 		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
+
 		std::cout << "Start Point: " << startPoint.x << " " << startPoint.y << '\n';
 		std::cout << "Cursor Point: " << cursorPoint.x << " " << cursorPoint.y << '\n';
-		cursorPoint = direct(startPoint, cursorPoint);
+
+		cursorPoint = findEndPoint(startPoint, cursorPoint);
+
+		auto trajectory = new LinearTrajectoryGenerator;
 		trajectory->setSegment(startPoint, cursorPoint, 8);
+		bullet->setTrajectory(trajectory);
+
+		bulletObjects.push_back(bullet);
+		if (bulletObjects.size() > ammoAmount)
+			bulletObjects.erase(bulletObjects.begin());
+
+		std::cout << "Bullet amount: " << bulletObjects.size() << '\n';
 	}
 }
 
-Point MyFramework::direct(Point start, Point end) {
+Point MyFramework::findEndPoint(Point start, Point end) {
 	Point Point = end;
 	int incX = Point.x - start.x;
 	int incY = Point.y - start.y;

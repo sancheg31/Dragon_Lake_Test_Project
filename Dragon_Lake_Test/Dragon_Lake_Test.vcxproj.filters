@@ -60,6 +60,9 @@
     <ClCompile Include="LinearTrajectoryGenerator.cpp">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
+    <ClCompile Include="Advanceable.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletObject.h">
@@ -105,6 +108,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="LinearTrajectoryGenerator.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Advanceable.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
