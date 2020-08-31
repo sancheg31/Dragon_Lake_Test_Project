@@ -7,24 +7,32 @@
 #include "Utility.h"
 #include "MapArea.h"
 
-BulletObject::BulletObject(std::shared_ptr<MapArea> area, Point mapPosition)
-	: GameObject(area, mapPosition) { } 
+BulletObject::BulletObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea)
+	: GameObject(marea, sarea) { } 
 
 BulletObject::~BulletObject() { }
 
-void BulletObject::moveTo(Point position) {
-	mapPosition = position;
+void BulletObject::setPosition(Point pos) {
+	if (isValidPosition(pos))
+		position = pos;
 }
 
-void BulletObject::advance() {
-
+void BulletObject::move(Point pos) {
+	if (isValidPosition(position + pos))
+		position = position + pos;
 }
 
-void BulletObject::draw(const ScreenArea& area) const {
-	if (isValidPosition(mapPosition)) {
-		auto sprite = getSprite();
-		sprite->draw(mapPosition - area.currentShift());
-	}
+void BulletObject::draw() const {
+	auto sprite = getSprite();
+	sprite->draw(screenPosition());
+}
+
+Point BulletObject::screenPosition() const {
+	return position - screenArea->currentShift();
+}
+
+Point BulletObject::mapPosition() const {
+	return position;
 }
 
 std::shared_ptr<CSprite> BulletObject::getSprite() const {
