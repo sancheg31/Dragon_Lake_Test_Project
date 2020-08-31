@@ -17,8 +17,8 @@
 
 struct CommandLineArgs
 {
-	Size windowDim = Size{ 750, 750 };
-	Size mapDim = Size{ 500, 500 };
+	Size windowDim = Size{ 1000, 1000 };
+	Size mapDim = Size{ 1000, 1000 };
 
 	int enemies = 10;
 	int ammo = 100;

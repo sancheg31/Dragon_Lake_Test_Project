@@ -27,6 +27,7 @@
     <ClCompile Include="CursorObject.cpp" />
     <ClCompile Include="Dragon_Lake_Test.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="MapArea.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="CSpriteFactory.h" />
     <ClInclude Include="CursorObject.h" />
     <ClInclude Include="EnemyObject.h" />
+    <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="MapArea.h" />
