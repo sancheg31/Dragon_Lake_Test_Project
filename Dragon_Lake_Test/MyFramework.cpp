@@ -20,8 +20,7 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 void MyFramework::setEnemyTrajectory(EnemyObject* enemy) {
 
 	auto trajectory = new LinearTrajectoryGenerator();
-	std::cout << "enemy upLeft: " << Rectangle{ *enemy }.upLeft().x << " " << Rectangle{ *enemy }.upLeft().y << '\n';
-	std::cout << "enemy center: " << Rectangle{ *enemy }.center().x << " " << Rectangle{ *enemy }.center().y << "\n\n";
+	std::cout << "enemy center: " << Rectangle{ *enemy }.center().x << " " << Rectangle{ *enemy }.center().y << "\n";
 	trajectory->setSegment(Rectangle{ *enemy }.center(), Rectangle{ *playerObject }.center(), 8);
 	enemy->setTrajectory(trajectory);
 }
@@ -42,10 +41,12 @@ bool MyFramework::Init() {
 	playerObject->setPosition(playerPosition);
 	screenArea->calculateScreenShift(mapArea, *playerObject);
 
-	enemySpawner = new EnemySpawner(objectFactory, mapArea->size());
+	auto [ewidth, eheight] = CSpriteFactory::spriteSize("enemy");
+	enemySpawner = new EnemySpawner(objectFactory, Size{ mapArea->size().width - ewidth, mapArea->size().height - eheight });
 	enemySpawner->addProhibitZone(playerObject);
-	for (int i = 0; i < enemyCount; ++i)
-		enemyObjects.push_back(*enemySpawner->generate(1, 2).begin());
+	
+	enemyObjects = enemySpawner->generate(enemyCount, 2);
+
 	for (auto& enemy : enemyObjects) {
 		setEnemyTrajectory(enemy);
 	}
