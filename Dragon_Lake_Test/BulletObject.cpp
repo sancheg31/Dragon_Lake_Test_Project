@@ -54,7 +54,9 @@ Point BulletObject::mapPosition() const {
 }
 
 Point BulletObject::next() const {
-	return trajectoryGenerator->next();
+	if (trajectoryGenerator)
+		return trajectoryGenerator->next();
+	return mapPosition();
 }
 
 std::shared_ptr<CSprite> BulletObject::getSprite() const {

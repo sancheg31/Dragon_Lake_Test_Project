@@ -6,6 +6,8 @@
 #include "ScreenArea.h"
 #include "MapArea.h"
 
+#include "LinearTrajectoryGenerator.h"
+
 #include "Utility.h"
 
 EnemyObject::EnemyObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea) :
@@ -13,6 +15,15 @@ EnemyObject::EnemyObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenA
 
 EnemyObject::~EnemyObject() { }
 
+LinearTrajectoryGenerator* EnemyObject::setTrajectory(LinearTrajectoryGenerator* generator) {
+	auto gen = trajectoryGenerator.release();
+	trajectoryGenerator.reset(generator);
+	return gen;
+}
+
+LinearTrajectoryGenerator* EnemyObject::removeTrajectory() {
+	return trajectoryGenerator.release();
+}
 
 void EnemyObject::setPosition(Point pos) {
 	if (isValidPosition(pos))
@@ -23,6 +34,12 @@ void EnemyObject::setPosition(Point pos) {
 	 if (isValidPosition(position + pos))
 		 position = position + pos;
 }
+
+ void EnemyObject::advance() {
+	 if (trajectoryGenerator) {
+		 setPosition(trajectoryGenerator->advance());
+	 }
+ }
 
 void EnemyObject::draw() const {
 	auto sprite = getSprite();
@@ -35,6 +52,12 @@ Point EnemyObject::screenPosition() const {
 
 Point EnemyObject::mapPosition() const {
 	return position;
+}
+
+Point EnemyObject::next() const {
+	if (trajectoryGenerator)
+		return trajectoryGenerator->next();
+	return mapPosition();
 }
 
 std::shared_ptr<CSprite> EnemyObject::getSprite() const {
