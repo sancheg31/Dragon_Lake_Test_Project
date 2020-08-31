@@ -15,6 +15,7 @@
 #include "CursorObject.h"
 #include "BulletObject.h"
 #include "GameObjectFactory.h"
+#include "EnemySpawner.h"
 
 #include "LinearTrajectoryGenerator.h"
 
@@ -22,7 +23,10 @@ class MyFramework : public Framework
 {
 public:
 
-	MyFramework(GameObjectFactory* objectFactory, std::shared_ptr<MapArea> mapArea, std::shared_ptr<ScreenArea> screenArea, int enemy, int ammo);
+	MyFramework(std::shared_ptr<GameObjectFactory> objectFactory, 
+				std::shared_ptr<MapArea> mapArea, 
+				std::shared_ptr<ScreenArea> screenArea, 
+				int enemy, int ammo);
 
 	virtual void PreInit(int& width, int& height, bool& fullscreen);
 
@@ -42,14 +46,15 @@ public:
 
 	Point findEndPoint(Point start, Point end);
 
-	EnemyObject* generateEnemyObject(Point p);
+	void setEnemyTrajectory(EnemyObject* enemy);
 private:
 
-	GameObjectFactory* objectFactory;
+	std::shared_ptr<GameObjectFactory> objectFactory;
 	std::shared_ptr<MapArea> mapArea;
 	std::shared_ptr<ScreenArea> screenArea;
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
+	EnemySpawner* enemySpawner;
 
 	int enemyCount;
 	int ammoAmount;

@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "CSpriteFactory.h"
 #include "GameObjectFactory.h"
+#include "EnemySpawner.h"
 
 #include "Utility.h"
 
@@ -15,10 +16,12 @@
 #include <string>
 #include <cstring>
 
+#include <random>
+
 struct CommandLineArgs
 {
-	Size windowDim = Size{ 1000, 1000 };
-	Size mapDim = Size{ 1000, 1000 };
+	Size windowDim = Size{ 500, 500 };
+	Size mapDim = Size{ 500, 500 };
 
 	int enemies = 10;
 	int ammo = 100;
@@ -62,7 +65,7 @@ int main(int argc, char* argv[]) {
 	GameObject::setSpriteCreator(new CSpriteFactory());
 	std::shared_ptr<MapArea> map = std::make_shared<MapArea>(args.mapDim);
 	std::shared_ptr<ScreenArea> screen = std::make_shared<ScreenArea>(args.windowDim);
-	std::cout << screen->size().width << " " << screen->size().height << '\n';
-	auto factory = new GameObjectFactory(map, screen);
+	std::shared_ptr<GameObjectFactory> factory = std::make_shared<GameObjectFactory>(map, screen);
+	
 	return run(new MyFramework(factory, map, screen, args.enemies, args.ammo));
 }

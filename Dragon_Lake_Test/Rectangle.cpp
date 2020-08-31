@@ -56,7 +56,7 @@ bool Rectangle::isCollide(Rectangle rect) const {
 
 Point Rectangle::center() const {
 	Point dimensions = downRight_ - upLeft_;
-	return (upLeft_ + (dimensions / 2));
+	return (upLeft_ + Point{ dimensions.x / 2, dimensions.y / 2 });
 }
 
 Point Rectangle::upRight() const {

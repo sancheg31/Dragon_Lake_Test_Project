@@ -7,7 +7,7 @@
 
 #include "CSpriteFactory.h"
 
-MyFramework::MyFramework(GameObjectFactory* factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
+MyFramework::MyFramework(std::shared_ptr<GameObjectFactory> factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
 					objectFactory(factory), mapArea(marea), screenArea(sarea), enemyCount(enemy), ammoAmount(ammo)  { }
 
 void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
@@ -17,14 +17,13 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 	fullscreen = false;
 }
 
-EnemyObject* MyFramework::generateEnemyObject(Point p) {
-	auto enemy = objectFactory->createEnemyObject();
-	enemy->setPosition(p);
+void MyFramework::setEnemyTrajectory(EnemyObject* enemy) {
 
 	auto trajectory = new LinearTrajectoryGenerator();
+	std::cout << "enemy upLeft: " << Rectangle{ *enemy }.upLeft().x << " " << Rectangle{ *enemy }.upLeft().y << '\n';
+	std::cout << "enemy center: " << Rectangle{ *enemy }.center().x << " " << Rectangle{ *enemy }.center().y << "\n\n";
 	trajectory->setSegment(Rectangle{ *enemy }.center(), Rectangle{ *playerObject }.center(), 8);
 	enemy->setTrajectory(trajectory);
-	return enemy;
 }
 
 bool MyFramework::Init() {
@@ -42,17 +41,24 @@ bool MyFramework::Init() {
 	
 	playerObject->setPosition(playerPosition);
 	screenArea->calculateScreenShift(mapArea, *playerObject);
-	
-	enemyObjects.push_back(generateEnemyObject(Point{ 20, 20 }));
-	//enemyObjects.push_back(generateEnemyObject(Point{ 100, 100 }));
-	enemyObjects.push_back(generateEnemyObject(Point{ 400, 400 }));
-	enemyObjects.push_back(generateEnemyObject(Point{ 500, 500}));
 
+	enemySpawner = new EnemySpawner(objectFactory, mapArea->size());
+	enemySpawner->addProhibitZone(playerObject);
+	for (int i = 0; i < enemyCount; ++i)
+		enemyObjects.push_back(*enemySpawner->generate(1, 2).begin());
+	for (auto& enemy : enemyObjects) {
+		setEnemyTrajectory(enemy);
+	}
+
+	std::cout << enemyObjects.size() << '\n';
 	showCursor(false);
 	return true;
 }
 
 void MyFramework::Close() {
+	delete enemySpawner;
+	delete playerObject;
+	delete cursorObject;
 	GameObject::releaseResources();
 	bulletObjects.clear();
 	enemyObjects.clear();
@@ -84,6 +90,7 @@ bool MyFramework::Tick() {
 			if (bulletRect.isCollide(enemyRect)) {
 				isCollided = true;
 				iter2 = enemyObjects.erase(iter2);
+				std::cout << "enemies left: " << enemyObjects.size() << '\n';
 			}
 			else {
 				++iter2;
