@@ -7,7 +7,7 @@ T sign(T val) {
 	return (T(0) < val) - (T(0) > val);
 }
 
-class SegmentPixelEngine {
+class TrajectoryGenerator {
 public:
 
 	void setSegment(Line line, int precision);

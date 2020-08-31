@@ -1,10 +1,10 @@
 
-#include "SegmentPixelEngine.h"
+#include "TrajectoryGenerator.h"
 
 #include <algorithm>
 #include <iostream>
 
-void SegmentPixelEngine::setSegment(Line line, int precision) {
+void TrajectoryGenerator::setSegment(Line line, int precision) {
 	Point startPoint = line.start;
 	Point endPoint = line.end;
 	int m = 1 << precision;
@@ -52,7 +52,7 @@ void SegmentPixelEngine::setSegment(Line line, int precision) {
 	signY = sign(signY);
 }
 
-/*virtual*/ Point SegmentPixelEngine::next() {
+/*virtual*/ Point TrajectoryGenerator::next() {
 	if (xPrevails) {
 		if (d0 < 0)
 			moveX();
@@ -68,19 +68,19 @@ void SegmentPixelEngine::setSegment(Line line, int precision) {
 	return start;
 }
 
-void SegmentPixelEngine::moveX() {
+void TrajectoryGenerator::moveX() {
 	d0 += b;
 	start.x += signX;
 	--steps;
 }
 
-void SegmentPixelEngine::moveY() {
+void TrajectoryGenerator::moveY() {
 	d0 += b;
 	start.y += signY;
 	--steps;
 }
 
-void SegmentPixelEngine::moveXY() {
+void TrajectoryGenerator::moveXY() {
 	d0 -= a;
 	start.y += signY;
 	start.x += signX;
