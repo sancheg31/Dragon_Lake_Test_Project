@@ -7,23 +7,22 @@ class BulletObject;
 class EnemyObject;
 
 class MapArea;
-struct Point;
+class ScreenArea;
 
 #include <memory>
-
-#include "MapArea.h"
 
 class GameObjectFactory
 {
 public:
-	GameObjectFactory(std::shared_ptr<MapArea> area);
+	GameObjectFactory(std::shared_ptr<MapArea> mapArea, std::shared_ptr<ScreenArea> screenArea);
 
-	EnemyObject* createEnemyObject(Point startPosition, Point playerPosition) const;
-	BulletObject* createBulletObject(Point startPosition, Point cursorPosition) const;
-	PlayerObject* createPlayerObject(Point startPosition) const; 
+	EnemyObject* createEnemyObject() const;
+	BulletObject* createBulletObject() const;
+	PlayerObject* createPlayerObject() const; 
 	CursorObject* createCursorObject() const;
 
 private:
 	std::shared_ptr<MapArea> mapArea;
+	std::shared_ptr<ScreenArea> screenArea;
 };
 

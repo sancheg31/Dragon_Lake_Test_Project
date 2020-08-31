@@ -11,7 +11,7 @@ CursorObject::CursorObject(std::shared_ptr<MapArea> marea, std::shared_ptr<Scree
 CursorObject::~CursorObject() { }
 
 void CursorObject::move(Point pos) {
-	if (isValidPosition(position - pos))
+	if (isValidPosition(position + pos))
 		position = position + pos;
 }
 

@@ -6,24 +6,28 @@
 #include "CursorObject.h"
 #include "PlayerObject.h"
 
+#include "MapArea.h"
+#include "ScreenArea.h"
+
 #include "SegmentPixelEngine.h"
 
-GameObjectFactory::GameObjectFactory(std::shared_ptr<MapArea> area) : mapArea(area) { }
+GameObjectFactory::GameObjectFactory(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea): 
+	mapArea(marea), screenArea(sarea) { }
 
-EnemyObject* GameObjectFactory::createEnemyObject(Point startPosition, Point playerPosition) const {
+EnemyObject* GameObjectFactory::createEnemyObject() const {
 	auto enemy = new EnemyObject(mapArea, startPosition);
 	return enemy;
 }
 
-BulletObject* GameObjectFactory::createBulletObject(Point startPosition, Point cursorPosition) const {
+BulletObject* GameObjectFactory::createBulletObject() const {
 	auto bullet = new BulletObject(mapArea, startPosition);
 	return bullet;
 }
 
-PlayerObject* GameObjectFactory::createPlayerObject(Point startPosition) const {
-	return new PlayerObject(mapArea, startPosition);
+PlayerObject* GameObjectFactory::createPlayerObject() const {
+	return new PlayerObject(mapArea, screenArea);
 }
 
 CursorObject* GameObjectFactory::createCursorObject() const {
-	return new CursorObject(mapArea, { -1, -1 });
+	return new CursorObject(mapArea, screenArea);
 }

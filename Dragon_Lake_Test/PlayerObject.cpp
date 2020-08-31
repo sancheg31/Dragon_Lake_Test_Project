@@ -30,7 +30,7 @@ Point PlayerObject::mapPosition() const {
 }
 
 Point PlayerObject::screenPosition() const {
-	return position - screenArea->calculateScreenShift(*this);
+	return position - screenArea->currentShift();
 }
 
 bool PlayerObject::isValidPosition(Point p) const {
@@ -38,8 +38,6 @@ bool PlayerObject::isValidPosition(Point p) const {
 	auto [objw, objh] = size();
 	return (p.x >= 0 && p.y >= 0 && p.x <= width - objw && p.y <= height - objh);
 }
-
-
 
 std::shared_ptr<CSprite> PlayerObject::getSprite() const {
 	return spriteCreator->getSprite("player");

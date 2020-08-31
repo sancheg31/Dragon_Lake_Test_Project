@@ -8,23 +8,33 @@
 
 #include "Utility.h"
 
-EnemyObject::EnemyObject(std::shared_ptr<MapArea> area, Point startPosition) : 
-	GameObject(area, startPosition) { }
+EnemyObject::EnemyObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea) :
+	GameObject(marea, sarea) { }
 
 EnemyObject::~EnemyObject() { }
 
- void EnemyObject::moveTo(Point position) {
-	if (isValidPosition(position))
-		mapPosition = position;
+
+void EnemyObject::setPosition(Point pos) {
+	if (isValidPosition(pos))
+		position = pos;
 }
 
- void EnemyObject::advance() {
+ void EnemyObject::move(Point pos) {
+	 if (isValidPosition(position + pos))
+		 position = position + pos;
+}
 
- }
-
-void EnemyObject::draw(const ScreenArea& area) const {
+void EnemyObject::draw() const {
 	auto sprite = getSprite();
-	sprite->draw(mapPosition - area.currentShift());
+	sprite->draw(screenPosition());
+}
+
+Point EnemyObject::screenPosition() const {
+	return position - screenArea->currentShift();
+}
+
+Point EnemyObject::mapPosition() const {
+	return position;
 }
 
 std::shared_ptr<CSprite> EnemyObject::getSprite() const {
