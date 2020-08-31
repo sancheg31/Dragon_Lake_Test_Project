@@ -32,13 +32,16 @@ bool MyFramework::Init() {
 	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
 	playerObject = objectFactory->createPlayerObject();
-	screenArea->calculateScreenShift(mapArea, *playerObject);
 	cursorObject = objectFactory->createCursorObject();
 
 	auto [cx, cy] = screenRect.center();
 	auto [px, py] = playerObject->size();
-	Point playerPosition{ cx - px / 2, cx - py / 2 };
+	Point playerPosition{ cx - px / 2, cy - py / 2 };
+	
+	std::cout << playerPosition.x << " " << playerPosition.y << '\n';
+	
 	playerObject->setPosition(playerPosition);
+	screenArea->calculateScreenShift(mapArea, *playerObject);
 	
 	enemyObjects.push_back(generateEnemyObject(Point{ 20, 20 }));
 	//enemyObjects.push_back(generateEnemyObject(Point{ 100, 100 }));

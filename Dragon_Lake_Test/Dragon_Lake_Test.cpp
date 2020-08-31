@@ -1,34 +1,68 @@
 ﻿
 
 #include "MyFramework.h"
-#include "Rectangle.h"
+
+#include "MapArea.h"
 #include "ScreenArea.h"
+#include "GameObject.h"
 #include "CSpriteFactory.h"
 #include "GameObjectFactory.h"
 
-#include "GameObject.h"
+#include "Utility.h"
 
 #include <iostream>
-/*
-void rectangleTest() {
-	Rectangle first{ Point{0, 0}, Size{20, 20}, VertexPosition::UP_LEFT };
-	Rectangle second{ Point{10, 10}, Size{20, 20}, VertexPosition::UP_LEFT };
-	std::cout << std::boolalpha << first.isCollide(second) << "\n" <<
-		first.isContained(Point{ 10, 10 }) << " " << first.isContained(Point{ 0, 0 }) << " " << first.isContained(Point{ 20, 20 })
-		<< " " << first.isContained(Point{ 0, 20 }) << " " << first.isContained(Point{ 20, 0 }) << " " << !first.isContained(Point{ 20, 21 }) << '\n';
+#include <regex>
+#include <string>
+#include <cstring>
 
-	first = Rectangle{ Point{20, 40}, Size{15, 8}, VertexPosition::UP_LEFT };
-	second = Rectangle{ Point{17, 28}, Size{5, 13}, VertexPosition::UP_LEFT };
-	std::cout << std::boolalpha << second.isCollide(first) << " " << first.isCollide(second) << " " << second.isCollide(second) << '\n';
+struct CommandLineArgs
+{
+	Size windowDim = Size{ 750, 750 };
+	Size mapDim = Size{ 500, 500 };
 
-	std::cout << (first.upLeft() == Point{ 20, 40 }) << " " << (first.upRight() == Point{ 35, 40 })
-		<< " " << (first.downLeft() == Point{ 20, 48 }) << " " << (first.downRight() == Point{ 35, 48 }) << '\n';
-}*/
+	int enemies = 10;
+	int ammo = 100;
+};
+
+CommandLineArgs parse(int argc, char* argv[]) {
+
+	CommandLineArgs args;
+	std::regex dimensions{ "R(([1-9][0-9])*x([1-9][0-9]*))" };
+
+	for (int i = 1; i < argc; ++i) {
+		if (strcmp(argv[i], "-window") == 0) {
+			++i;
+			if (std::cmatch results;  std::regex_match(argv[i], results, dimensions)) {
+				args.mapDim = Size{ std::stoi(results[1]), std::stoi(results[2]) };
+			}
+		}
+		else if (strcmp(argv[i], "-map") == 0) {
+			++i;
+			if (std::cmatch results;  std::regex_match(argv[i], results, dimensions)) {
+				args.windowDim = Size{ std::stoi(results[1]), std::stoi(results[2]) };
+			}
+		}
+		else if (strcmp(argv[i], "-num_enemies") == 0) {
+			++i;
+			args.enemies = std::stoi(argv[i]);
+		}
+		else if (strcmp(argv[i], "-num_ammo") == 0) {
+			++i;
+			args.enemies = std::stoi(argv[i]);
+		}
+	}
+	return args;
+}
+
 
 int main(int argc, char* argv[]) {
+
+	auto args = parse(argc, argv);
+
 	GameObject::setSpriteCreator(new CSpriteFactory());
-	std::shared_ptr<MapArea> map = std::make_shared<MapArea>(Size{ 600, 600 });
-	std::shared_ptr<ScreenArea> screen = std::make_shared<ScreenArea>(Size{ 400, 400 });
+	std::shared_ptr<MapArea> map = std::make_shared<MapArea>(args.mapDim);
+	std::shared_ptr<ScreenArea> screen = std::make_shared<ScreenArea>(args.windowDim);
+	std::cout << screen->size().width << " " << screen->size().height << '\n';
 	auto factory = new GameObjectFactory(map, screen);
-	return run(new MyFramework(factory, map, screen, 10, 3));
+	return run(new MyFramework(factory, map, screen, args.enemies, args.ammo));
 }
