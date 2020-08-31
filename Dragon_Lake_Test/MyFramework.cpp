@@ -6,6 +6,7 @@
 #include "Rectangle.h"
 #include "SegmentPixelEngine.h"
 
+#include "CSpriteFactory.h"
 
 MyFramework::MyFramework(GameObjectFactory* factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
 					objectFactory(factory), mapArea(marea), screenArea(sarea), enemyCount(enemy), ammoAmount(ammo)  { }
@@ -54,6 +55,7 @@ void MyFramework::Close() {
 	delete cursorObject;
 	delete objectFactory;
 	delete engine;
+	delete GameObject::releaseResources();
 
 	enemyObjects.clear();
 }
@@ -93,7 +95,7 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		bullet = objectFactory->createBulletObject();
 
 		Point startPoint = Rectangle{ *playerObject }.center();
-		auto [cx, cy] = cursorObject->screenPosition();
+		auto [cx, cy] = cursorObject->mapPosition();
 		auto [cwidth, cheight] = cursorObject->size();
 		auto [bwidth, bheight] = bullet->size();
 		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
@@ -119,13 +121,13 @@ Point MyFramework::direct(Point start, Point end) {
 void MyFramework::onKeyPressed(FRKey k) {
 	switch (k) {
 	case FRKey::LEFT:
-		playerObject->move(Point{10, 0});
+		playerObject->move(Point{ -10, 0 });
 		break;
 	case FRKey::RIGHT:
 		playerObject->move(Point{ 10, 0 });
 		break;
 	case FRKey::UP:
-		playerObject->move(Point{ 0, 10 });
+		playerObject->move(Point{ 0, -10 });
 		break;
 	case FRKey::DOWN:
 		playerObject->move(Point{ 0, 10 });
