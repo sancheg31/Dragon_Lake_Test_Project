@@ -12,7 +12,8 @@ class LinearTrajectoryGenerator
 public:
 
 	void setSegment(Point start, Point end, int precision);
-	Point next();
+	Point advance();
+	Point next() const;
 
 private:
 
@@ -21,7 +22,9 @@ private:
 	void moveXY();
 
 	long d0, dE, a, b;
-	Point start;
+	Point startPoint;
+	Point endPoint;
+	Point currentPoint;
 	int signX, signY;
 	int xPrevails;
 	int steps;

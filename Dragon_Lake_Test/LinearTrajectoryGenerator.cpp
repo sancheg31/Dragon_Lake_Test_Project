@@ -4,7 +4,12 @@
 #include <algorithm>
 #include <iostream>
 
-void LinearTrajectoryGenerator::setSegment(Point startPoint, Point endPoint, int precision) {
+void LinearTrajectoryGenerator::setSegment(Point startp, Point endp, int precision) {
+	
+	startPoint = startp;
+	endPoint = endp;
+	currentPoint = startPoint;
+	
 	int m = 1 << precision;
 	long mask = m - 1;
 
@@ -14,7 +19,7 @@ void LinearTrajectoryGenerator::setSegment(Point startPoint, Point endPoint, int
 	signX = endPoint.x - startPoint.x;
 	signY = endPoint.y - startPoint.y;
 
-	start = startPoint;
+	
 	steps = std::max(labs(endPoint.x - startPoint.x), labs(endPoint.y - startPoint.y));
 
 	Point maskedStartPoint = { startPointN.x & mask, startPointN.y & mask };
@@ -50,7 +55,7 @@ void LinearTrajectoryGenerator::setSegment(Point startPoint, Point endPoint, int
 	signY = sign(signY);
 }
 
-/*virtual*/ Point LinearTrajectoryGenerator::next() {
+Point LinearTrajectoryGenerator::advance() {
 	if (xPrevails) {
 		if (d0 < 0)
 			moveX();
@@ -63,24 +68,41 @@ void LinearTrajectoryGenerator::setSegment(Point startPoint, Point endPoint, int
 		else
 			moveXY();
 	}
-	return start;
+	return currentPoint;
 }
+
+Point LinearTrajectoryGenerator::next() const {
+	if (xPrevails) {
+		if (d0 < 0)
+			return Point{ currentPoint.x + signX, currentPoint.y };
+		else
+			return Point{ currentPoint.x + signX, currentPoint.y + signY };
+	}
+	else {
+		if (d0 < 0)
+			return Point{ currentPoint.x, currentPoint.y + signY };
+		else
+			return Point{ currentPoint.x + signX, currentPoint.y + signY };
+	}
+}
+
+
 
 void LinearTrajectoryGenerator::moveX() {
 	d0 += b;
-	start.x += signX;
+	currentPoint.x += signX;
 	--steps;
 }
 
 void LinearTrajectoryGenerator::moveY() {
 	d0 += b;
-	start.y += signY;
+	currentPoint.y += signY;
 	--steps;
 }
 
 void LinearTrajectoryGenerator::moveXY() {
 	d0 -= a;
-	start.y += signY;
-	start.x += signX;
+	currentPoint.y += signY;
+	currentPoint.x += signX;
 	--steps;
 }
