@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "Rectangle.h"
-#include "SegmentPixelEngine.h"
 
 #include "CSpriteFactory.h"
 
@@ -20,12 +19,12 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 
 bool MyFramework::Init() {
 
-	engine = new SegmentPixelEngine();
+	trajectory = new TrajectoryGenerator();
 
 	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
 	playerObject = objectFactory->createPlayerObject();
-	screenArea->calculateScreenShift(*playerObject);
+	screenArea->calculateScreenShift(mapArea, *playerObject);
 	cursorObject = objectFactory->createCursorObject();
 
 	auto [cx, cy] = screenRect.center();
@@ -56,7 +55,7 @@ void MyFramework::Close() {
 	delete playerObject;
 	delete cursorObject;
 	delete objectFactory;
-	delete engine;
+	delete trajectory;
 	
 
 	enemyObjects.clear();
@@ -79,7 +78,7 @@ bool MyFramework::Tick() {
 		enemy->draw();
 
 	if (bullet) {
-		auto point = engine->next();
+		auto point = trajectory->next();
 		bullet->setPosition(point);
 		bullet->draw();
 	}
@@ -104,7 +103,7 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		std::cout << "Start Point: " << startPoint.x << " " << startPoint.y << '\n';
 		std::cout << "Cursor Point: " << cursorPoint.x << " " << cursorPoint.y << '\n';
 		cursorPoint = direct(startPoint, cursorPoint);
-		engine->setSegment(Line{ startPoint, cursorPoint }, 8);
+		trajectory->setSegment(Line{ startPoint, cursorPoint }, 8);
 	}
 }
 
@@ -135,7 +134,7 @@ void MyFramework::onKeyPressed(FRKey k) {
 		playerObject->move(Point{ 0, 10 });
 		break;
 	}
-	screenArea->calculateScreenShift(*playerObject);
+	screenArea->calculateScreenShift(mapArea, *playerObject);
 }
 
 void MyFramework::onKeyReleased(FRKey k) {

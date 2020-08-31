@@ -6,9 +6,9 @@
 
 #include <iostream>
 
-ScreenArea::ScreenArea(std::shared_ptr<MapArea> area, Size screenDim) : mapArea(area), screenDimensions(screenDim) { }
+ScreenArea::ScreenArea(Size screenDim) : screenDimensions(screenDim) { }
 
-Point ScreenArea::calculateScreenShift(const PlayerObject& playerObject) const {
+Point ScreenArea::calculateScreenShift(std::shared_ptr<MapArea> mapArea, const PlayerObject& playerObject) const {
 	if (currentPlayerPosition != playerObject.mapPosition()) {
 
 		currentPlayerPosition = playerObject.mapPosition();

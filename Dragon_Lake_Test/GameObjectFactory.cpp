@@ -9,8 +9,6 @@
 #include "MapArea.h"
 #include "ScreenArea.h"
 
-#include "SegmentPixelEngine.h"
-
 GameObjectFactory::GameObjectFactory(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea): 
 	mapArea(marea), screenArea(sarea) { }
 

@@ -16,7 +16,7 @@
 #include "BulletObject.h"
 #include "GameObjectFactory.h"
 
-#include "SegmentPixelEngine.h"
+#include "TrajectoryGenerator.h"
 
 class MyFramework : public Framework 
 {
@@ -48,7 +48,7 @@ private:
 	std::shared_ptr<ScreenArea> screenArea;
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
-	SegmentPixelEngine* engine;
+	TrajectoryGenerator* trajectory;
 
 	int enemyCount;
 	int ammoAmount;
