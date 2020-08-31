@@ -36,8 +36,12 @@ void EnemyObject::setPosition(Point pos) {
 }
 
  void EnemyObject::advance() {
-	 if (trajectoryGenerator) {
+	 if (trajectoryGenerator && ticksCount == 10) {
+		 ticksCount = 0;
 		 setPosition(trajectoryGenerator->advance());
+	 }
+	 else {
+		 ++ticksCount;
 	 }
  }
 

@@ -30,5 +30,6 @@ protected:
 
 private:
 	std::unique_ptr<LinearTrajectoryGenerator> trajectoryGenerator;
+	int ticksCount = 0;
 };
 

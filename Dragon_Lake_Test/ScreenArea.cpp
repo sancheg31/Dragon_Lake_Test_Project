@@ -4,8 +4,6 @@
 #include "Rectangle.h"
 #include "MapArea.h"
 
-#include <iostream>
-
 ScreenArea::ScreenArea(Size screenDim) : screenDimensions(screenDim) { }
 
 Point ScreenArea::calculateScreenShift(std::shared_ptr<MapArea> mapArea, const PlayerObject& playerObject) const {
@@ -33,10 +31,6 @@ Point ScreenArea::calculateScreenShift(std::shared_ptr<MapArea> mapArea, const P
 		if (downRightScreenVertex.y > mapDimensions.height) {
 			upLeftScreenVertex.y = mapDimensions.height - screenDimensions.height;
 		}
-
-		std::cout << "Left screen vertex: " << upLeftScreenVertex.x << " " << upLeftScreenVertex.y << '\n';
-		std::cout << "Player's center: " << centerPlayer.x << " " << centerPlayer.y << '\n';
-		std::cout << "Player's position: " << currentPlayerPosition.x << " " << currentPlayerPosition.y << "\n\n";
 	}
 	
 	return upLeftScreenVertex;

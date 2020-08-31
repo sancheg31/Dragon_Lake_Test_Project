@@ -41,6 +41,8 @@ public:
 	virtual void onKeyReleased(FRKey k);
 
 	Point findEndPoint(Point start, Point end);
+
+	EnemyObject* generateEnemyObject(Point p);
 private:
 
 	GameObjectFactory* objectFactory;

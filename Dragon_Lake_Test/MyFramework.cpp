@@ -17,6 +17,16 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 	fullscreen = false;
 }
 
+EnemyObject* MyFramework::generateEnemyObject(Point p) {
+	auto enemy = objectFactory->createEnemyObject();
+	enemy->setPosition(p);
+
+	auto trajectory = new LinearTrajectoryGenerator();
+	trajectory->setSegment(Rectangle{ *enemy }.center(), Rectangle{ *playerObject }.center(), 8);
+	enemy->setTrajectory(trajectory);
+	return enemy;
+}
+
 bool MyFramework::Init() {
 
 	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
@@ -29,19 +39,11 @@ bool MyFramework::Init() {
 	auto [px, py] = playerObject->size();
 	Point playerPosition{ cx - px / 2, cx - py / 2 };
 	playerObject->setPosition(playerPosition);
-
-	auto enemy = objectFactory->createEnemyObject();
-	enemy->setPosition(Point{ 20, 20 });
-	enemyObjects.push_back(enemy);
-	enemy = objectFactory->createEnemyObject();
-	enemy->setPosition(Point{ 50, 50 });
-	enemyObjects.push_back(enemy);
-	enemy = objectFactory->createEnemyObject();
-	enemy->setPosition(Point{ 400, 400 });
-	enemyObjects.push_back(enemy);
-	enemy = objectFactory->createEnemyObject();
-	enemy->setPosition(Point{ 500, 500});
-	enemyObjects.push_back(enemy);
+	
+	enemyObjects.push_back(generateEnemyObject(Point{ 20, 20 }));
+	//enemyObjects.push_back(generateEnemyObject(Point{ 100, 100 }));
+	enemyObjects.push_back(generateEnemyObject(Point{ 400, 400 }));
+	enemyObjects.push_back(generateEnemyObject(Point{ 500, 500}));
 
 	showCursor(false);
 	return true;
@@ -66,14 +68,15 @@ bool MyFramework::Tick() {
 	playerObject->draw();
 	cursorObject->draw();
 
-	for (auto& enemy : enemyObjects)
+	for (auto& enemy : enemyObjects) {
+		enemy->advance();
 		enemy->draw();
+	}
 
 	for (auto& bullet : bulletObjects) {
 		bullet->advance();
 		bullet->draw();
 	}
-
 	return false;
 }
 
@@ -92,9 +95,9 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		auto [bwidth, bheight] = bullet->size();
 		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
 
-		std::cout << "Start Point: " << startPoint.x << " " << startPoint.y << '\n';
+		/*std::cout << "Start Point: " << startPoint.x << " " << startPoint.y << '\n';
 		std::cout << "Cursor Point: " << cursorPoint.x << " " << cursorPoint.y << '\n';
-
+		*/
 		cursorPoint = findEndPoint(startPoint, cursorPoint);
 
 		auto trajectory = new LinearTrajectoryGenerator;
@@ -104,8 +107,8 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		bulletObjects.push_back(bullet);
 		if (bulletObjects.size() > ammoAmount)
 			bulletObjects.erase(bulletObjects.begin());
-
-		std::cout << "Bullet amount: " << bulletObjects.size() << '\n';
+		/*
+		std::cout << "Bullet amount: " << bulletObjects.size() << '\n';*/
 	}
 }
 
@@ -137,6 +140,12 @@ void MyFramework::onKeyPressed(FRKey k) {
 		break;
 	}
 	screenArea->calculateScreenShift(mapArea, *playerObject);
+
+	for (auto& enemy : enemyObjects) {
+		auto traj = enemy->removeTrajectory();
+		traj->setSegment(enemy->mapPosition(), Rectangle{ *playerObject }.center(), 8);
+		enemy->setTrajectory(traj);
+	}
 }
 
 void MyFramework::onKeyReleased(FRKey k) {
