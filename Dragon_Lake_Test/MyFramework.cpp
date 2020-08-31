@@ -60,23 +60,51 @@ bool MyFramework::Tick() {
 	Rectangle playerRect{ *playerObject };
 
 	for (auto& enemy : enemyObjects) {
-		Rectangle enemyRect{ *enemy };
-		if (playerRect.isCollide(enemyRect))
-			return true;
-	}
-
-	playerObject->draw();
-	cursorObject->draw();
-
-	for (auto& enemy : enemyObjects) {
 		enemy->advance();
-		enemy->draw();
 	}
 
 	for (auto& bullet : bulletObjects) {
 		bullet->advance();
+	}
+	/*
+	for (auto& enemy : enemyObjects) {
+		Rectangle enemyRect{ *enemy };
+		if (playerRect.isCollide(enemyRect))
+			return true;
+	}*/
+
+	for (auto iter = bulletObjects.begin(); iter != bulletObjects.end(); ) {
+		Rectangle bulletRect{ **iter };
+		bool isCollided = false;
+		for (auto iter2 = enemyObjects.begin(); iter2 != enemyObjects.end(); ) {
+			Rectangle enemyRect{ **iter2 };
+			if (bulletRect.isCollide(enemyRect)) {
+				isCollided = true;
+				iter2 = enemyObjects.erase(iter2);
+			}
+			else {
+				++iter2;
+			}
+		}
+
+		if (isCollided) {
+			iter = bulletObjects.erase(iter);
+		}
+		else {
+			++iter;
+		}
+	}
+
+	playerObject->draw();
+	for (auto& enemy : enemyObjects) {
+		enemy->draw();
+	}
+
+	for (auto& bullet : bulletObjects) {
 		bullet->draw();
 	}
+	cursorObject->draw();
+
 	return false;
 }
 
