@@ -7,10 +7,11 @@ T sign(T val) {
 	return (T(0) < val) - (T(0) > val);
 }
 
-class TrajectoryGenerator {
+class LinearTrajectoryGenerator 
+{
 public:
 
-	void setSegment(Line line, int precision);
+	void setSegment(Point start, Point end, int precision);
 	Point next();
 
 private:

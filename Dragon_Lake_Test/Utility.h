@@ -6,7 +6,7 @@ struct Point
 	int y;
 };
 
-struct Line
+struct Trajectory
 {
 	Point start;
 	Point end;

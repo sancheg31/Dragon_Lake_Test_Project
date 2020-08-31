@@ -22,6 +22,8 @@ public:
 	
 	void removeSprites();
 
+	static Size spriteSize(const std::string& key);
+
 private:
 
 	static void initializePaths();

@@ -19,7 +19,7 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 
 bool MyFramework::Init() {
 
-	trajectory = new TrajectoryGenerator();
+	trajectory = new LinearTrajectoryGenerator();
 
 	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
@@ -103,7 +103,7 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		std::cout << "Start Point: " << startPoint.x << " " << startPoint.y << '\n';
 		std::cout << "Cursor Point: " << cursorPoint.x << " " << cursorPoint.y << '\n';
 		cursorPoint = direct(startPoint, cursorPoint);
-		trajectory->setSegment(Line{ startPoint, cursorPoint }, 8);
+		trajectory->setSegment(startPoint, cursorPoint, 8);
 	}
 }
 

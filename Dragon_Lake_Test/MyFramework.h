@@ -16,7 +16,7 @@
 #include "BulletObject.h"
 #include "GameObjectFactory.h"
 
-#include "TrajectoryGenerator.h"
+#include "LinearTrajectoryGenerator.h"
 
 class MyFramework : public Framework 
 {
@@ -48,7 +48,7 @@ private:
 	std::shared_ptr<ScreenArea> screenArea;
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
-	TrajectoryGenerator* trajectory;
+	LinearTrajectoryGenerator* trajectory;
 
 	int enemyCount;
 	int ammoAmount;

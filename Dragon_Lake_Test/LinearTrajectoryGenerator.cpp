@@ -1,12 +1,10 @@
 
-#include "TrajectoryGenerator.h"
+#include "LinearTrajectoryGenerator.h"
 
 #include <algorithm>
 #include <iostream>
 
-void TrajectoryGenerator::setSegment(Line line, int precision) {
-	Point startPoint = line.start;
-	Point endPoint = line.end;
+void LinearTrajectoryGenerator::setSegment(Point startPoint, Point endPoint, int precision) {
 	int m = 1 << precision;
 	long mask = m - 1;
 
@@ -52,7 +50,7 @@ void TrajectoryGenerator::setSegment(Line line, int precision) {
 	signY = sign(signY);
 }
 
-/*virtual*/ Point TrajectoryGenerator::next() {
+/*virtual*/ Point LinearTrajectoryGenerator::next() {
 	if (xPrevails) {
 		if (d0 < 0)
 			moveX();
@@ -68,19 +66,19 @@ void TrajectoryGenerator::setSegment(Line line, int precision) {
 	return start;
 }
 
-void TrajectoryGenerator::moveX() {
+void LinearTrajectoryGenerator::moveX() {
 	d0 += b;
 	start.x += signX;
 	--steps;
 }
 
-void TrajectoryGenerator::moveY() {
+void LinearTrajectoryGenerator::moveY() {
 	d0 += b;
 	start.y += signY;
 	--steps;
 }
 
-void TrajectoryGenerator::moveXY() {
+void LinearTrajectoryGenerator::moveXY() {
 	d0 -= a;
 	start.y += signY;
 	start.x += signX;

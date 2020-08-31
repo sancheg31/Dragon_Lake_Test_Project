@@ -2,6 +2,7 @@
 #include "CSpriteFactory.h"
 
 #include "CSprite.h"
+#include "Utility.h"
 
 std::map<std::string, std::shared_ptr<CSprite>> CSpriteFactory::paths = {};
 bool CSpriteFactory::created = false;
@@ -22,7 +23,11 @@ void CSpriteFactory::removeSprites() {
 	paths.clear();
 }
 
-void CSpriteFactory::initializePaths() {
+/*static*/ Size CSpriteFactory::spriteSize(const std::string& key) {
+	return paths.find(key)->second->size();
+}
+
+/*static*/ void CSpriteFactory::initializePaths() {
 	paths.insert({ std::string("player"),	std::make_shared<CSprite>("Framework/data/avatar.jpg") });
 	paths.insert({ std::string("bullet"), std::make_shared<CSprite>("Framework/data/bullet.png") });
 	paths.insert({ std::string("circle"), std::make_shared<CSprite>("Framework/data/circle.tga") });

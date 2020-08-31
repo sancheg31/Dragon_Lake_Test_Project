@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BulletObject.cpp" />
+    <ClCompile Include="CollisionChecker.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CSpriteFactory.cpp" />
     <ClCompile Include="CursorObject.cpp" />
@@ -32,10 +33,11 @@
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="ScreenArea.cpp" />
-    <ClCompile Include="TrajectoryGenerator.cpp" />
+    <ClCompile Include="LinearTrajectoryGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletObject.h" />
+    <ClInclude Include="CollisionChecker.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CSpriteFactory.h" />
     <ClInclude Include="CursorObject.h" />
@@ -47,7 +49,7 @@
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="ScreenArea.h" />
-    <ClInclude Include="TrajectoryGenerator.h" />
+    <ClInclude Include="LinearTrajectoryGenerator.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
