@@ -51,7 +51,6 @@ bool MyFramework::Init() {
 		setEnemyTrajectory(enemy);
 	}
 
-	std::cout << enemyObjects.size() << '\n';
 	showCursor(false);
 	return true;
 }
@@ -88,7 +87,7 @@ bool MyFramework::Tick() {
 		bool isCollided = false;
 		for (auto iter2 = enemyObjects.begin(); iter2 != enemyObjects.end(); ) {
 			Rectangle enemyRect{ **iter2 };
-			if (bulletRect.isCollide(enemyRect)) {
+			if (bulletRect.isCollide(enemyRect) || enemyRect.isCollide(bulletRect)) {
 				isCollided = true;
 				iter2 = enemyObjects.erase(iter2);
 				std::cout << "enemies left: " << enemyObjects.size() << '\n';
