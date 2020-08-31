@@ -18,6 +18,10 @@ void CSpriteFactory::addSprite(const std::string& key, const char* path) {
 	paths.insert({ key, std::make_shared<CSprite>(path) });
 }
 
+void CSpriteFactory::removeSprites() {
+	paths.clear();
+}
+
 void CSpriteFactory::initializePaths() {
 	paths.insert({ std::string("player"),	std::make_shared<CSprite>("Framework/data/avatar.jpg") });
 	paths.insert({ std::string("bullet"), std::make_shared<CSprite>("Framework/data/bullet.png") });

@@ -19,6 +19,8 @@ public:
 
 	std::shared_ptr<CSprite> getSprite(std::string spriteName) const;
 	void addSprite(const std::string& key, const char* path);
+	
+	void removeSprites();
 
 private:
 

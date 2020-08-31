@@ -51,11 +51,13 @@ bool MyFramework::Init() {
 }
 
 void MyFramework::Close() {
+	
+	GameObject::releaseResources();
 	delete playerObject;
 	delete cursorObject;
 	delete objectFactory;
 	delete engine;
-	delete GameObject::releaseResources();
+	
 
 	enemyObjects.clear();
 }
