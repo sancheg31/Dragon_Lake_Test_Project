@@ -15,12 +15,12 @@ GameObjectFactory::GameObjectFactory(std::shared_ptr<MapArea> marea, std::shared
 	mapArea(marea), screenArea(sarea) { }
 
 EnemyObject* GameObjectFactory::createEnemyObject() const {
-	auto enemy = new EnemyObject(mapArea, startPosition);
+	auto enemy = new EnemyObject(mapArea, screenArea);
 	return enemy;
 }
 
 BulletObject* GameObjectFactory::createBulletObject() const {
-	auto bullet = new BulletObject(mapArea, startPosition);
+	auto bullet = new BulletObject(mapArea, screenArea);
 	return bullet;
 }
 

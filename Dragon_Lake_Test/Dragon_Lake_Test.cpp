@@ -28,7 +28,7 @@ void rectangleTest() {
 int main(int argc, char* argv[]) {
 	GameObject::setSpriteCreator(new CSpriteFactory());
 	std::shared_ptr<MapArea> map = std::make_shared<MapArea>(Size{ 600, 600 });
-	ScreenArea screen{ map, Size{ 400, 400 } };
-	auto factory = new GameObjectFactory(map);
+	std::shared_ptr<ScreenArea> screen = std::make_shared<ScreenArea>(map, Size{ 400, 400 });
+	auto factory = new GameObjectFactory(map, screen);
 	return run(new MyFramework(factory, map, screen, 10, 3));
 }

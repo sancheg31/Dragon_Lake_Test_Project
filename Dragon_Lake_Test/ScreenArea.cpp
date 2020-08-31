@@ -9,9 +9,9 @@
 ScreenArea::ScreenArea(std::shared_ptr<MapArea> area, Size screenDim) : mapArea(area), screenDimensions(screenDim) { }
 
 Point ScreenArea::calculateScreenShift(const PlayerObject& playerObject) const {
-	if (currentPlayerPosition != playerObject.position()) {
+	if (currentPlayerPosition != playerObject.mapPosition()) {
 
-		currentPlayerPosition = playerObject.position();
+		currentPlayerPosition = playerObject.mapPosition();
 
 		Rectangle playerRectangle{ playerObject };
 		Point centerPlayer = playerRectangle.center();

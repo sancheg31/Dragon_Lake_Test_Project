@@ -31,7 +31,7 @@ Rectangle::Rectangle(Point p, Size dim, VertexPosition position) {
 	}
 }
 
-Rectangle::Rectangle(const GameObject& object) : Rectangle(object.position(), object.size(), VertexPosition::UP_LEFT) { }
+Rectangle::Rectangle(const GameObject& object) : Rectangle(object.mapPosition(), object.size(), VertexPosition::UP_LEFT) { }
 
 void Rectangle::constructFromUpperLeft(Point p, Size dimensions) {
 	upLeft_ = p;

@@ -22,7 +22,7 @@ class MyFramework : public Framework
 {
 public:
 
-	MyFramework(GameObjectFactory* objectFactory, std::shared_ptr<MapArea> mapArea, ScreenArea screenArea, int enemy, int ammo);
+	MyFramework(GameObjectFactory* objectFactory, std::shared_ptr<MapArea> mapArea, std::shared_ptr<ScreenArea> screenArea, int enemy, int ammo);
 
 	virtual void PreInit(int& width, int& height, bool& fullscreen);
 
@@ -45,7 +45,7 @@ private:
 
 	GameObjectFactory* objectFactory;
 	std::shared_ptr<MapArea> mapArea;
-	ScreenArea screenArea;
+	std::shared_ptr<ScreenArea> screenArea;
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
 	SegmentPixelEngine* engine;

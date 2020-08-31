@@ -7,11 +7,11 @@
 #include "SegmentPixelEngine.h"
 
 
-MyFramework::MyFramework(GameObjectFactory* factory, std::shared_ptr<MapArea> marea, ScreenArea sarea, int enemy, int ammo) : 
+MyFramework::MyFramework(GameObjectFactory* factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
 					objectFactory(factory), mapArea(marea), screenArea(sarea), enemyCount(enemy), ammoAmount(ammo)  { }
 
 void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
-	auto [width_, height_] = screenArea.size();
+	auto [width_, height_] = screenArea->size();
 	width = width_;
 	height = height_;
 	fullscreen = false;
@@ -21,21 +21,29 @@ bool MyFramework::Init() {
 
 	engine = new SegmentPixelEngine();
 
-	Rectangle screenRect(Point{ 0, 0 }, screenArea.size(), VertexPosition::UP_LEFT);
+	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
-	playerObject = objectFactory->createPlayerObject(Point{ 0, 0 });
-	screenArea.calculateScreenShift(*playerObject);
+	playerObject = objectFactory->createPlayerObject();
+	screenArea->calculateScreenShift(*playerObject);
 	cursorObject = objectFactory->createCursorObject();
 
 	auto [cx, cy] = screenRect.center();
 	auto [px, py] = playerObject->size();
 	Point playerPosition{ cx - px / 2, cx - py / 2 };
-	playerObject->moveTo(playerPosition);
+	playerObject->setPosition(playerPosition);
 
-	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 20, 20 }, playerPosition));
-	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 400, 400 }, playerPosition));
-	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 300, 300 }, playerPosition));
-	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 500, 500 }, playerPosition));
+	auto enemy = objectFactory->createEnemyObject();
+	enemy->setPosition(Point{ 20, 20 });
+	enemyObjects.push_back(enemy);
+	enemy = objectFactory->createEnemyObject();
+	enemy->setPosition(Point{ 50, 50 });
+	enemyObjects.push_back(enemy);
+	enemy = objectFactory->createEnemyObject();
+	enemy->setPosition(Point{ 400, 400 });
+	enemyObjects.push_back(enemy);
+	enemy = objectFactory->createEnemyObject();
+	enemy->setPosition(Point{ 500, 500});
+	enemyObjects.push_back(enemy);
 
 	showCursor(false);
 	return true;
@@ -52,7 +60,6 @@ void MyFramework::Close() {
 
 bool MyFramework::Tick() {
 	drawTestBackground();
-	screenArea.calculateScreenShift(*playerObject);
 	Rectangle playerRect{ *playerObject };
 
 	for (auto& enemy : enemyObjects) {
@@ -61,33 +68,32 @@ bool MyFramework::Tick() {
 			return true;
 	}
 
-	playerObject->draw(screenArea);
-	cursorObject->draw(screenArea);
+	playerObject->draw();
+	cursorObject->draw();
 
 	for (auto& enemy : enemyObjects)
-		enemy->draw(screenArea);
+		enemy->draw();
 
 	if (bullet) {
 		auto point = engine->next();
-		bullet->moveTo(point);
-		bullet->draw(screenArea);
+		bullet->setPosition(point);
+		bullet->draw();
 	}
 
 	return false;
 }
 
 void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
-	cursorObject->moveTo(Point{ x, y });
-	std::cout << xrelative << " " << yrelative << '\n';
+	cursorObject->setPosition(Point{ x, y });
 }
 
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 	if (!isReleased) {
 
-		bullet = objectFactory->createBulletObject(Point{ 0, 0 }, Point{ 0, 0 });
+		bullet = objectFactory->createBulletObject();
 
 		Point startPoint = Rectangle{ *playerObject }.center();
-		auto [cx, cy] = cursorObject->position();
+		auto [cx, cy] = cursorObject->screenPosition();
 		auto [cwidth, cheight] = cursorObject->size();
 		auto [bwidth, bheight] = bullet->size();
 		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
@@ -97,6 +103,7 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		engine->setSegment(Line{ startPoint, cursorPoint }, 8);
 	}
 }
+
 Point MyFramework::direct(Point start, Point end) {
 	Point Point = end;
 	int incX = Point.x - start.x;
@@ -112,19 +119,19 @@ Point MyFramework::direct(Point start, Point end) {
 void MyFramework::onKeyPressed(FRKey k) {
 	switch (k) {
 	case FRKey::LEFT:
-		playerObject->moveTo(playerObject->position() - Point{10, 0});
+		playerObject->move(Point{10, 0});
 		break;
 	case FRKey::RIGHT:
-		playerObject->moveTo(playerObject->position() + Point{ 10, 0 });
+		playerObject->move(Point{ 10, 0 });
 		break;
 	case FRKey::UP:
-		playerObject->moveTo(playerObject->position() - Point{ 0, 10 });
+		playerObject->move(Point{ 0, 10 });
 		break;
 	case FRKey::DOWN:
-		playerObject->moveTo(playerObject->position() + Point{ 0, 10 });
+		playerObject->move(Point{ 0, 10 });
 		break;
 	}
-	
+	screenArea->calculateScreenShift(*playerObject);
 }
 
 void MyFramework::onKeyReleased(FRKey k) {
