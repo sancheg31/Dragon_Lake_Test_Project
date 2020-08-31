@@ -7,10 +7,22 @@
 #include "Utility.h"
 #include "MapArea.h"
 
+#include "LinearTrajectoryGenerator.h"
+
 BulletObject::BulletObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea)
-	: GameObject(marea, sarea) { } 
+	: GameObject(marea, sarea) { }
 
 BulletObject::~BulletObject() { }
+
+LinearTrajectoryGenerator* BulletObject::setTrajectory(LinearTrajectoryGenerator* generator) {
+	auto gen = trajectoryGenerator.release();
+	trajectoryGenerator.reset(generator);
+	return gen;
+}
+
+LinearTrajectoryGenerator* BulletObject::removeTrajectory() {
+	return trajectoryGenerator.release();
+}
 
 void BulletObject::setPosition(Point pos) {
 	if (isValidPosition(pos))
@@ -20,6 +32,12 @@ void BulletObject::setPosition(Point pos) {
 void BulletObject::move(Point pos) {
 	if (isValidPosition(position + pos))
 		position = position + pos;
+}
+
+void BulletObject::advance() {
+	if (trajectoryGenerator) {
+		setPosition(trajectoryGenerator->advance());
+	}
 }
 
 void BulletObject::draw() const {
@@ -33,6 +51,10 @@ Point BulletObject::screenPosition() const {
 
 Point BulletObject::mapPosition() const {
 	return position;
+}
+
+Point BulletObject::next() const {
+	return trajectoryGenerator->next();
 }
 
 std::shared_ptr<CSprite> BulletObject::getSprite() const {

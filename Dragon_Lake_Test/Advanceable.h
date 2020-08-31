@@ -6,11 +6,13 @@ struct Point;
 class Advanceable
 {
 public:
+	virtual ~Advanceable();
 
-	virtual void setTrajectory(LinearTrajectoryGenerator* trajectory) = 0;
-	virtual LinearTrajectoryGenerator* trajectory() const = 0;
+	virtual LinearTrajectoryGenerator* setTrajectory(LinearTrajectoryGenerator* trajectory) = 0;
+	virtual LinearTrajectoryGenerator* removeTrajectory() = 0;
 	virtual void advance() = 0;
-	virtual Point next() = 0;
+
+	virtual Point next() const = 0;
 
 protected:
 };
