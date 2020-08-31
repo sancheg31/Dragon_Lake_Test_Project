@@ -6,6 +6,7 @@
 #include "Rectangle.h"
 
 #include "CSpriteFactory.h"
+#include "CSprite.h"
 
 MyFramework::MyFramework(std::shared_ptr<GameObjectFactory> factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
 					objectFactory(factory), mapArea(marea), screenArea(sarea), enemyCount(enemy), ammoAmount(ammo)  { }
@@ -65,23 +66,10 @@ void MyFramework::Close() {
 }
 
 bool MyFramework::Tick() {
+
 	drawTestBackground();
 	Rectangle playerRect{ *playerObject };
-
-	for (auto& enemy : enemyObjects) {
-		enemy->advance();
-	}
-
-	for (auto& bullet : bulletObjects) {
-		bullet->advance();
-	}
-	/*
-	for (auto& enemy : enemyObjects) {
-		Rectangle enemyRect{ *enemy };
-		if (playerRect.isCollide(enemyRect))
-			return true;
-	}*/
-
+	
 	for (auto iter = bulletObjects.begin(); iter != bulletObjects.end(); ) {
 		Rectangle bulletRect{ **iter };
 		bool isCollided = false;
@@ -105,13 +93,24 @@ bool MyFramework::Tick() {
 		}
 	}
 
+	/*
+	for (auto& enemy : enemyObjects) {
+		Rectangle enemyRect{ *enemy };
+		if (playerRect.isCollide(enemyRect))
+			return true;
+	}*/
+
 	playerObject->draw();
 	for (auto& enemy : enemyObjects) {
+		enemy->advance();
 		enemy->draw();
 	}
 
 	for (auto& bullet : bulletObjects) {
-		bullet->draw();
+		auto sprite = new CSprite("Framework/data/bullet.png");
+		bullet->advance();
+		sprite->draw(bullet->screenPosition());
+		delete sprite;
 	}
 	cursorObject->draw();
 
@@ -123,7 +122,17 @@ void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
 }
 
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
+
 	if (!isReleased) {
+		
+		BulletObject* testBullet{ nullptr };
+		if (!bulletObjects.empty())
+			testBullet = bulletObjects.back();
+		Point testPoint{};
+
+		if (testBullet) {
+			testPoint = testBullet->mapPosition();
+		}
 
 		auto bullet = objectFactory->createBulletObject();
 		
@@ -145,8 +154,14 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		bulletObjects.push_back(bullet);
 		if (bulletObjects.size() > ammoAmount)
 			bulletObjects.erase(bulletObjects.begin());
-		/*
-		std::cout << "Bullet amount: " << bulletObjects.size() << '\n';*/
+		
+		Point testPoint2{};
+		if (testBullet) {
+			testPoint2 = testBullet->mapPosition();
+		}
+		if (testPoint != testPoint2) {
+			std::cout << "Point Changed!\n";
+		}
 	}
 }
 

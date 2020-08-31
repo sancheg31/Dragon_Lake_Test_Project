@@ -20,11 +20,11 @@
 
 struct CommandLineArgs
 {
-	Size windowDim = Size{ 200, 200 };
+	Size windowDim = Size{ 600, 600 };
 	Size mapDim = Size{ 600, 600 };
 
-	int enemies = 10;
-	int ammo = 100;
+	int enemies = 2;
+	int ammo = 3;
 };
 
 CommandLineArgs parse(int argc, char* argv[]) {

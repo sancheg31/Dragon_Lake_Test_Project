@@ -23,8 +23,6 @@ public:
 	virtual Point screenPosition() const override;
 	virtual Point next() const override;
 
-	
-
 protected:
 
 	virtual std::shared_ptr<CSprite> getSprite() const override;

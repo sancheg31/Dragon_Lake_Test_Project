@@ -13,7 +13,7 @@ public:
 
 	void setSegment(Point start, Point end, int precision);
 	Point advance();
-	Point next() const;;
+	Point next() const;
 
 private:
 
