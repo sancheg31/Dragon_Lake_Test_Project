@@ -1,3 +1,4 @@
+
 #include "BulletStorage.h"
 
 #include <algorithm>
@@ -25,15 +26,14 @@ void BulletStorage::removeFirstN(std::size_t n) {
 	}
 }
 
+auto BulletStorage::erase(iterator iter) -> iterator {
+	return cont.erase(iter);
+}
+
 void BulletStorage::clear() {
 	for (auto& enemy : cont)
 		delete enemy;
 	cont.clear();
-}
-
-
-auto BulletStorage::storage() -> container_type& {
-	return cont;
 }
 
 auto BulletStorage::begin() -> iterator {

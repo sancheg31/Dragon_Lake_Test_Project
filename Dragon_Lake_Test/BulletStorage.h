@@ -19,9 +19,11 @@ public:
 	BulletStorage& operator=(BulletStorage&&) = default;
 
 
+	iterator erase(iterator iter);
 	void setMaxCapacity(std::size_t capacity);
 	void addBullet(BulletObject*);
 	void clear();
+	
 	
 	iterator begin();
 	const_iterator begin() const;
@@ -30,8 +32,6 @@ public:
 
 	const_iterator cbegin() const;
 	const_iterator cend() const;
-
-	container_type& storage();
 
 private:
 
