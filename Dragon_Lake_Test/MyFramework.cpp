@@ -9,7 +9,9 @@
 #include "CSprite.h"
 
 MyFramework::MyFramework(std::shared_ptr<GameObjectFactory> factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
-					objectFactory(factory), mapArea(marea), screenArea(sarea), enemyCount(enemy), ammoAmount(ammo)  { }
+					objectFactory(factory), mapArea(marea), screenArea(sarea), enemyCount(enemy), ammoAmount(ammo)  { 
+
+}
 
 void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 	auto [width_, height_] = screenArea->size();
@@ -27,7 +29,7 @@ void MyFramework::setEnemyTrajectory(EnemyObject* enemy) {
 }
 
 bool MyFramework::Init() {
-
+	CSpriteFactory::loadResources();
 	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
 	playerObject = objectFactory->createPlayerObject();
@@ -44,13 +46,9 @@ bool MyFramework::Init() {
 
 	auto [ewidth, eheight] = CSpriteFactory::spriteSize("enemy");
 	enemySpawner = new EnemySpawner(objectFactory, Size{ mapArea->size().width - ewidth, mapArea->size().height - eheight });
-	enemySpawner->addProhibitZone(playerObject);
+	enemySpawner->addProhibitZone(playerObject, 4);
 	
-	enemyObjects = enemySpawner->generate(enemyCount, 2);
-
-	for (auto& enemy : enemyObjects) {
-		setEnemyTrajectory(enemy);
-	}
+	enemyObjects = enemySpawner->generate(playerObject, enemyCount);
 
 	showCursor(false);
 	return true;
@@ -58,11 +56,20 @@ bool MyFramework::Init() {
 
 void MyFramework::Close() {
 	delete enemySpawner;
-	delete playerObject;
 	delete cursorObject;
-	GameObject::releaseResources();
+
+	CSpriteFactory::releaseResources();
+	for (auto& bullet : bulletObjects)
+		delete bullet;
+	for (auto& enemy : enemyObjects)
+		delete enemy;
 	bulletObjects.clear();
 	enemyObjects.clear();
+}
+
+void MyFramework::restart() {
+	Close();
+	Init();
 }
 
 bool MyFramework::Tick() {
@@ -77,6 +84,7 @@ bool MyFramework::Tick() {
 			Rectangle enemyRect{ **iter2 };
 			if (bulletRect.isCollide(enemyRect) || enemyRect.isCollide(bulletRect)) {
 				isCollided = true;
+				delete *iter2;
 				iter2 = enemyObjects.erase(iter2);
 				std::cout << "enemies left: " << enemyObjects.size() << '\n';
 			}
@@ -86,19 +94,21 @@ bool MyFramework::Tick() {
 		}
 
 		if (isCollided) {
+			delete *iter;
 			iter = bulletObjects.erase(iter);
 		}
 		else {
 			++iter;
 		}
 	}
-
-	/*
+	
 	for (auto& enemy : enemyObjects) {
 		Rectangle enemyRect{ *enemy };
-		if (playerRect.isCollide(enemyRect))
-			return true;
-	}*/
+		if (playerRect.isCollide(enemyRect)) {
+			restart();
+			return false;
+		}
+	}
 
 	playerObject->draw();
 	for (auto& enemy : enemyObjects) {
@@ -107,10 +117,8 @@ bool MyFramework::Tick() {
 	}
 
 	for (auto& bullet : bulletObjects) {
-		auto sprite = new CSprite("Framework/data/bullet.png");
 		bullet->advance();
-		sprite->draw(bullet->screenPosition());
-		delete sprite;
+		bullet->draw();
 	}
 	cursorObject->draw();
 
@@ -124,15 +132,6 @@ void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
 void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 	if (!isReleased) {
-		
-		BulletObject* testBullet{ nullptr };
-		if (!bulletObjects.empty())
-			testBullet = bulletObjects.back();
-		Point testPoint{};
-
-		if (testBullet) {
-			testPoint = testBullet->mapPosition();
-		}
 
 		auto bullet = objectFactory->createBulletObject();
 		
@@ -142,9 +141,6 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		auto [bwidth, bheight] = bullet->size();
 		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
 
-		/*std::cout << "Start Point: " << startPoint.x << " " << startPoint.y << '\n';
-		std::cout << "Cursor Point: " << cursorPoint.x << " " << cursorPoint.y << '\n';
-		*/
 		cursorPoint = findEndPoint(startPoint, cursorPoint);
 
 		auto trajectory = new LinearTrajectoryGenerator;
@@ -152,16 +148,12 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		bullet->setTrajectory(trajectory);
 
 		bulletObjects.push_back(bullet);
-		if (bulletObjects.size() > ammoAmount)
+		if (bulletObjects.size() > ammoAmount) {
+			std::cout << "yay\n";
+			delete *bulletObjects.begin();
 			bulletObjects.erase(bulletObjects.begin());
-		
-		Point testPoint2{};
-		if (testBullet) {
-			testPoint2 = testBullet->mapPosition();
 		}
-		if (testPoint != testPoint2) {
-			std::cout << "Point Changed!\n";
-		}
+	
 	}
 }
 

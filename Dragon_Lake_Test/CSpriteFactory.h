@@ -17,18 +17,17 @@ public:
 	CSpriteFactory(CSpriteFactory&&) = default;
 	~CSpriteFactory() = default;
 
-	std::shared_ptr<CSprite> getSprite(std::string spriteName) const;
+	std::shared_ptr<CSprite> getSprite(const std::string& key) const;
 	void addSprite(const std::string& key, const char* path);
 	
-	void removeSprites();
-
 	static Size spriteSize(const std::string& key);
+
+	static bool loadResources();
+	static void releaseResources();
 
 private:
 
-	static void initializePaths();
-
 	static std::map<std::string, std::shared_ptr<CSprite>> paths;
-	static bool created;
+	static bool loaded;
 };
 

@@ -44,6 +44,8 @@ public:
 
 	virtual void onKeyReleased(FRKey k);
 
+	void restart();
+
 	Point findEndPoint(Point start, Point end);
 
 	void setEnemyTrajectory(EnemyObject* enemy);
@@ -52,6 +54,7 @@ private:
 	std::shared_ptr<GameObjectFactory> objectFactory;
 	std::shared_ptr<MapArea> mapArea;
 	std::shared_ptr<ScreenArea> screenArea;
+	
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
 	EnemySpawner* enemySpawner;
