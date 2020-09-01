@@ -41,9 +41,10 @@ std::list<EnemyObject*> EnemySpawner::generate(PlayerObject* player, int amount)
 }
 
 Rectangle EnemySpawner::findProhibitArea(GameObject* object, double threshold) const {
-	auto [x, y] = object->mapPosition();
 	auto [width, height] = object->size();
-	Point upperLeft = Point{ x + width / 2 - (int)(threshold * width / 2), y + height / 2 - (int)(threshold * height / 2) };
+	Point enhancer = Point{ (int)(threshold * width / 2), (int)(threshold * height / 2) };
+
+	Point upperLeft = object->mapPosition() + (Point)object->size() / 2 - enhancer;
 	Size size = Size{ (int)(threshold * width), (int)(threshold * height) };
 	return Rectangle{ upperLeft, size, VertexPosition::UP_LEFT };
 }

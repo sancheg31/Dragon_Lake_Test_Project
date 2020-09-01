@@ -20,42 +20,29 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 	fullscreen = false;
 }
 
-void MyFramework::setEnemyTrajectory(EnemyObject* enemy) {
-
-	auto trajectory = new LinearTrajectoryGenerator();
-	std::cout << "enemy center: " << Rectangle{ *enemy }.center().x << " " << Rectangle{ *enemy }.center().y << "\n";
-	trajectory->setSegment(Rectangle{ *enemy }.center(), Rectangle{ *playerObject }.center(), 8);
-	enemy->setTrajectory(trajectory);
-}
-
 bool MyFramework::Init() {
 	CSpriteFactory::loadResources();
 	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
 	playerObject = objectFactory->createPlayerObject();
 	cursorObject = objectFactory->createCursorObject();
-
-	auto [cx, cy] = screenRect.center();
-	auto [px, py] = playerObject->size();
-	Point playerPosition{ cx - px / 2, cy - py / 2 };
 	
-	std::cout << playerPosition.x << " " << playerPosition.y << '\n';
-	
-	playerObject->setPosition(playerPosition);
-	screenArea->calculateScreenShift(mapArea, *playerObject);
-
-	auto [ewidth, eheight] = CSpriteFactory::spriteSize("enemy");
-	enemySpawner = new EnemySpawner(objectFactory, Size{ mapArea->size().width - ewidth, mapArea->size().height - eheight });
+	enemySpawner = new EnemySpawner(objectFactory, mapArea->size() - CSpriteFactory::spriteSize("enemy"));
 	enemySpawner->addProhibitZone(playerObject, 4);
 	
 	enemyObjects = enemySpawner->generate(playerObject, enemyCount);
 
 	showCursor(false);
+
+	std::cout << playerObject->mapPosition().x << " " << playerObject->mapPosition().y << '\n';
+	std::cout << screenArea->currentShift().x << " " << screenArea->currentShift().y << '\n';
+
 	return true;
 }
 
 void MyFramework::Close() {
 	delete enemySpawner;
+	delete playerObject;
 	delete cursorObject;
 
 	CSpriteFactory::releaseResources();
@@ -136,12 +123,8 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		auto bullet = objectFactory->createBulletObject();
 		
 		Point startPoint = Rectangle{ *playerObject }.center();
-		auto [cx, cy] = cursorObject->mapPosition();
-		auto [cwidth, cheight] = cursorObject->size();
-		auto [bwidth, bheight] = bullet->size();
-		Point cursorPoint = Point{ cx + cwidth / 2 - bwidth / 2, cy + cheight / 2 - bwidth / 2 };
-
-		cursorPoint = findEndPoint(startPoint, cursorPoint);
+		Point cursorPoint = cursorObject->mapPosition() + (Point)(cursorObject->size() / 2 - bullet->size() / 2);
+		//cursorPoint = findEndPoint(startPoint, cursorPoint);
 
 		auto trajectory = new LinearTrajectoryGenerator;
 		trajectory->setSegment(startPoint, cursorPoint, 8);
@@ -172,19 +155,18 @@ Point MyFramework::findEndPoint(Point start, Point end) {
 void MyFramework::onKeyPressed(FRKey k) {
 	switch (k) {
 	case FRKey::LEFT:
-		playerObject->move(Point{ -10, 0 });
+		playerObject->moveLeft();
 		break;
 	case FRKey::RIGHT:
-		playerObject->move(Point{ 10, 0 });
+		playerObject->moveRight();
 		break;
 	case FRKey::UP:
-		playerObject->move(Point{ 0, -10 });
+		playerObject->moveUp();
 		break;
 	case FRKey::DOWN:
-		playerObject->move(Point{ 0, 10 });
+		playerObject->moveDown();
 		break;
 	}
-	screenArea->calculateScreenShift(mapArea, *playerObject);
 
 	for (auto& enemy : enemyObjects) {
 		auto traj = enemy->removeTrajectory();
@@ -193,6 +175,4 @@ void MyFramework::onKeyPressed(FRKey k) {
 	}
 }
 
-void MyFramework::onKeyReleased(FRKey k) {
-
-}
+void MyFramework::onKeyReleased(FRKey k) { }

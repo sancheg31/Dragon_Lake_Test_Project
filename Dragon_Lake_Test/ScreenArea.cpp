@@ -11,11 +11,10 @@ Point ScreenArea::calculateScreenShift(std::shared_ptr<MapArea> mapArea, const P
 
 		currentPlayerPosition = playerObject.mapPosition();
 
-		Rectangle playerRectangle{ playerObject };
-		Point centerPlayer = playerRectangle.center();
+		Point centerPlayer = Rectangle{ playerObject }.center();
 
-		upLeftScreenVertex = Point{ centerPlayer.x - screenDimensions.width / 2, centerPlayer.y - screenDimensions.height / 2 };
-		Point downRightScreenVertex = Point{ centerPlayer.x + screenDimensions.width / 2, centerPlayer.y + screenDimensions.height / 2 };
+		upLeftScreenVertex = centerPlayer - (Point)screenDimensions / 2;
+		Point downRightScreenVertex = centerPlayer + (Point)screenDimensions / 2; 
 
 		if (upLeftScreenVertex.x < 0) {
 			upLeftScreenVertex.x = 0;

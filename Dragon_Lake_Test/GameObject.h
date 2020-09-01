@@ -31,7 +31,6 @@ public:
 	Size size() const;
 
 	static void setSpriteCreator(CSpriteFactory* factory);
-	static void releaseResources();
 
 protected:
 	virtual std::shared_ptr<CSprite> getSprite() const = 0;

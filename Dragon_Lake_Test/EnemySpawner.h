@@ -20,13 +20,12 @@ class EnemySpawner
 
 public:
 	EnemySpawner(std::shared_ptr<GameObjectFactory> factory, Size dims);
-
+	
 	EnemySpawner(const EnemySpawner&) = delete;
 	EnemySpawner(EnemySpawner&&) = default;
 	~EnemySpawner() = default;
 
 	void addProhibitZone(GameObject* object, double threshold);
-
 	void removeProhibitZone(GameObject* object);
 
 	std::list<EnemyObject*> generate(PlayerObject* player, int amount);

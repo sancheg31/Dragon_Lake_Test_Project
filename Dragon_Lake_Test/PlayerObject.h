@@ -15,6 +15,11 @@ public:
 	virtual Point mapPosition() const override;
 	virtual Point screenPosition() const override;
 
+	virtual void moveRight();
+	virtual void moveLeft();
+	virtual void moveUp();
+	virtual void moveDown();
+
 protected:
 
 	virtual std::shared_ptr<CSprite> getSprite() const override;

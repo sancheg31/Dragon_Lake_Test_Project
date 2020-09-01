@@ -13,8 +13,8 @@ void LinearTrajectoryGenerator::setSegment(Point startp, Point endp, int precisi
 	int m = 1 << precision;
 	long mask = m - 1;
 
-	Point startPointN = Point{ startPoint.x * m, startPoint.y * m };
-	Point endPointN = Point{ endPoint.x * m, endPoint.y * m };
+	Point startPointN = startPoint * m; 
+	Point endPointN = endPoint * m;
 
 	signX = endPoint.x - startPoint.x;
 	signY = endPoint.y - startPoint.y;
@@ -85,8 +85,6 @@ Point LinearTrajectoryGenerator::next() const {
 			return Point{ currentPoint.x + signX, currentPoint.y + signY };
 	}
 }
-
-
 
 void LinearTrajectoryGenerator::moveX() {
 	d0 += b;

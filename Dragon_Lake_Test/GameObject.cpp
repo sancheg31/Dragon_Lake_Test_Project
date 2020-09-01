@@ -19,8 +19,5 @@ Size GameObject::size() const {
 	spriteCreator.reset(factory);
 }
 
-/*static*/ void GameObject::releaseResources() {
-	return spriteCreator->removeSprites();
-}
 
 

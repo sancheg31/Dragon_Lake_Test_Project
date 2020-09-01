@@ -11,13 +11,17 @@ PlayerObject::PlayerObject(std::shared_ptr<MapArea> marea, std::shared_ptr<Scree
 PlayerObject::~PlayerObject() { }
 
 void PlayerObject::setPosition(Point pos) {
-	if (isValidPosition(pos))
+	if (isValidPosition(pos)) {
 		position = pos;
+		screenArea->calculateScreenShift(mapArea, *this);
+	}
 }
 
 void PlayerObject::move(Point pos) {
-	if (isValidPosition(position + pos))
+	if (isValidPosition(position + pos)) {
 		position = position + pos;
+		screenArea->calculateScreenShift(mapArea, *this);
+	}
 }
 
 void PlayerObject::draw() const {
@@ -41,6 +45,22 @@ bool PlayerObject::isValidPosition(Point p) const {
 
 std::shared_ptr<CSprite> PlayerObject::getSprite() const {
 	return spriteCreator->getSprite("player");
+}
+
+void PlayerObject::moveRight() {
+	move(Point{ 10, 0 });
+}
+
+void PlayerObject::moveLeft() {
+	move(Point{ -10, 0 });
+}
+
+void PlayerObject::moveUp() {
+	move(Point{ 0, -10 });
+}
+
+void PlayerObject::moveDown() {
+	move(Point{ 0, 10 });
 }
 
 

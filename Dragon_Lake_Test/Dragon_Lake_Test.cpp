@@ -1,5 +1,10 @@
 ﻿
 
+#include <iostream>
+#include <regex>
+#include <string>
+#include <cstring>
+
 #include "MyFramework.h"
 
 #include "MapArea.h"
@@ -7,23 +12,15 @@
 #include "GameObject.h"
 #include "CSpriteFactory.h"
 #include "GameObjectFactory.h"
-#include "EnemySpawner.h"
 
 #include "Utility.h"
-
-#include <iostream>
-#include <regex>
-#include <string>
-#include <cstring>
-
-#include <random>
 
 struct CommandLineArgs
 {
 	Size windowDim = Size{ 600, 600 };
-	Size mapDim = Size{ 600, 600 };
+	Size mapDim = Size{ 1000, 1000 };
 
-	int enemies = 2;
+	int enemies = 10;
 	int ammo = 3;
 };
 

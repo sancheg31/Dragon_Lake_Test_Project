@@ -47,8 +47,6 @@ public:
 	void restart();
 
 	Point findEndPoint(Point start, Point end);
-
-	void setEnemyTrajectory(EnemyObject* enemy);
 private:
 
 	std::shared_ptr<GameObjectFactory> objectFactory;
