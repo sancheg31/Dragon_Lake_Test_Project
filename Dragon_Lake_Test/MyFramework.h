@@ -5,19 +5,21 @@
 
 #include <Framework.h>
 
-#include "Utility.h"
+#include "BulletStorage.h"
 
-#include "ScreenArea.h"
-#include "MapArea.h"
+class EnemyStorage;
 
-#include "PlayerObject.h"
-#include "EnemyObject.h"
-#include "CursorObject.h"
-#include "BulletObject.h"
-#include "GameObjectFactory.h"
-#include "EnemySpawner.h"
+class PlayerObject;
+class CursorObject;
+class EnemyObject;
+class BulletObject;
 
-#include "LinearTrajectoryGenerator.h"
+class EnemySpawner;
+
+class GameObjectFactory;
+
+class MapArea;
+class ScreenArea;
 
 class MyFramework : public Framework 
 {
@@ -46,7 +48,6 @@ public:
 
 	void restart();
 
-	Point findEndPoint(Point start, Point end);
 private:
 
 	std::shared_ptr<GameObjectFactory> objectFactory;
@@ -58,10 +59,9 @@ private:
 	EnemySpawner* enemySpawner;
 
 	int enemyCount;
-	int ammoAmount;
 
 	std::list<EnemyObject*> enemyObjects;
-	std::list<BulletObject*> bulletObjects;
+	BulletStorage bulletObjects;
 };
 
 

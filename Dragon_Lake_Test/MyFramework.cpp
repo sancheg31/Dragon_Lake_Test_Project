@@ -3,15 +3,25 @@
 
 #include <iostream>
 
+#include "PlayerObject.h"
+#include "BulletObject.h"
+#include "EnemyObject.h"
+#include "CursorObject.h"
+
+#include "ScreenArea.h"
+#include "MapArea.h"
+
+#include "EnemySpawner.h"
+
+#include "GameObjectFactory.h"
+#include "CSpriteFactory.h"
+
 #include "Rectangle.h"
 
-#include "CSpriteFactory.h"
 #include "CSprite.h"
 
 MyFramework::MyFramework(std::shared_ptr<GameObjectFactory> factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
-					objectFactory(factory), mapArea(marea), screenArea(sarea), enemyCount(enemy), ammoAmount(ammo)  { 
-
-}
+					objectFactory(factory), mapArea(marea), screenArea(sarea), bulletObjects(ammo), enemyCount(enemy) {  }
 
 void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 	auto [width_, height_] = screenArea->size();
@@ -22,7 +32,6 @@ void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
 
 bool MyFramework::Init() {
 	CSpriteFactory::loadResources();
-	Rectangle screenRect(Point{ 0, 0 }, screenArea->size(), VertexPosition::UP_LEFT);
 
 	playerObject = objectFactory->createPlayerObject();
 	cursorObject = objectFactory->createCursorObject();
@@ -31,6 +40,8 @@ bool MyFramework::Init() {
 	enemySpawner->addProhibitZone(playerObject, 4);
 	
 	enemyObjects = enemySpawner->generate(playerObject, enemyCount);
+
+	std::cout << "enemy count: " << enemyObjects.size();
 
 	showCursor(false);
 
@@ -46,11 +57,10 @@ void MyFramework::Close() {
 	delete cursorObject;
 
 	CSpriteFactory::releaseResources();
-	for (auto& bullet : bulletObjects)
-		delete bullet;
+	bulletObjects.clear();
+
 	for (auto& enemy : enemyObjects)
 		delete enemy;
-	bulletObjects.clear();
 	enemyObjects.clear();
 }
 
@@ -64,6 +74,7 @@ bool MyFramework::Tick() {
 	drawTestBackground();
 	Rectangle playerRect{ *playerObject };
 	
+	//TODO
 	for (auto iter = bulletObjects.begin(); iter != bulletObjects.end(); ) {
 		Rectangle bulletRect{ **iter };
 		bool isCollided = false;
@@ -82,7 +93,7 @@ bool MyFramework::Tick() {
 
 		if (isCollided) {
 			delete *iter;
-			iter = bulletObjects.erase(iter);
+			iter = bulletObjects.storage().erase(iter);
 		}
 		else {
 			++iter;
@@ -97,7 +108,6 @@ bool MyFramework::Tick() {
 		}
 	}
 
-	playerObject->draw();
 	for (auto& enemy : enemyObjects) {
 		enemy->advance();
 		enemy->draw();
@@ -107,6 +117,7 @@ bool MyFramework::Tick() {
 		bullet->advance();
 		bullet->draw();
 	}
+	playerObject->draw();
 	cursorObject->draw();
 
 	return false;
@@ -125,29 +136,9 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		Point cursorPoint = Rectangle{ *cursorObject }.center() - bulletSize / 2;
 
 		auto bullet = objectFactory->createBulletObject(startPoint, cursorPoint);
-		
-		//cursorPoint = findEndPoint(startPoint, cursorPoint);
-
-		bulletObjects.push_back(bullet);
-		if (bulletObjects.size() > ammoAmount) {
-			std::cout << "yay\n";
-			delete *bulletObjects.begin();
-			bulletObjects.erase(bulletObjects.begin());
-		}
+		bulletObjects.addBullet(bullet);
 	
 	}
-}
-
-Point MyFramework::findEndPoint(Point start, Point end) {
-	Point Point = end;
-	int incX = Point.x - start.x;
-	int incY = Point.y - start.y;
-	auto [width, height] = mapArea->size();
-	while ((Point.x <= width) && ((Point.y <= height)) && (Point.x >= 0) && ((Point.y >= 0))) {
-		Point.x += incX;
-		Point.y += incY;
-	}
-	return Point;
 }
 
 void MyFramework::onKeyPressed(FRKey k) {

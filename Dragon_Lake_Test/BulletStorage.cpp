@@ -19,8 +19,21 @@ void BulletStorage::setMaxCapacity(std::size_t capacity) {
 }
 
 void BulletStorage::removeFirstN(std::size_t n) {
-	for (int i = 0; i < n; ++i)
+	for (int i = 0; i < n; ++i) {
+		delete *cont.begin();
 		cont.erase(cont.begin());
+	}
+}
+
+void BulletStorage::clear() {
+	for (auto& enemy : cont)
+		delete enemy;
+	cont.clear();
+}
+
+
+auto BulletStorage::storage() -> container_type& {
+	return cont;
 }
 
 auto BulletStorage::begin() -> iterator {
@@ -32,11 +45,11 @@ auto BulletStorage::end() -> iterator {
 }
 
 auto BulletStorage::begin() const -> const_iterator {
-	return cont.cbegin();
+	return cont.begin();
 }
 
 auto BulletStorage::end() const -> const_iterator {
-	return cont.cend();
+	return cont.end();
 }
 
 auto BulletStorage::cbegin() const -> const_iterator {

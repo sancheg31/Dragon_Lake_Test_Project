@@ -13,7 +13,9 @@
 EnemyObject::EnemyObject(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea) :
 	GameObject(marea, sarea) { }
 
-EnemyObject::~EnemyObject() { }
+EnemyObject::~EnemyObject() { 
+	trajectoryGenerator.reset(nullptr);
+}
 
 LinearTrajectoryGenerator* EnemyObject::setTrajectory(LinearTrajectoryGenerator* generator) {
 	auto gen = trajectoryGenerator.release();

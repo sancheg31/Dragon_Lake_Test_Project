@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Advanceable.cpp" />
+    <ClCompile Include="BulletStorage.cpp" />
     <ClCompile Include="BulletObject.cpp" />
     <ClCompile Include="CollisionChecker.cpp" />
     <ClCompile Include="CSprite.cpp" />
@@ -39,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Advanceable.h" />
+    <ClInclude Include="BulletStorage.h" />
     <ClInclude Include="BulletObject.h" />
     <ClInclude Include="CollisionChecker.h" />
     <ClInclude Include="CSprite.h" />
