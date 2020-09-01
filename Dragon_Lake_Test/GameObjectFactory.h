@@ -19,7 +19,7 @@ public:
 	GameObjectFactory(std::shared_ptr<MapArea> mapArea, std::shared_ptr<ScreenArea> screenArea);
 
 	EnemyObject* createEnemyObject(Point position) const;
-	BulletObject* createBulletObject() const;
+	BulletObject* createBulletObject(Point startPosition, Point cursorPosition) const;
 	PlayerObject* createPlayerObject() const; 
 	CursorObject* createCursorObject() const;
 

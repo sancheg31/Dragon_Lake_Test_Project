@@ -120,15 +120,13 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 	if (!isReleased) {
 
-		auto bullet = objectFactory->createBulletObject();
-		
-		Point startPoint = Rectangle{ *playerObject }.center();
-		Point cursorPoint = cursorObject->mapPosition() + (Point)(cursorObject->size() / 2 - bullet->size() / 2);
-		//cursorPoint = findEndPoint(startPoint, cursorPoint);
+		auto bulletSize = (Point)CSpriteFactory::spriteSize("bullet");
+		Point startPoint = Rectangle{ *playerObject }.center() - bulletSize / 2;
+		Point cursorPoint = Rectangle{ *cursorObject }.center() - bulletSize / 2;
 
-		auto trajectory = new LinearTrajectoryGenerator;
-		trajectory->setSegment(startPoint, cursorPoint, 8);
-		bullet->setTrajectory(trajectory);
+		auto bullet = objectFactory->createBulletObject(startPoint, cursorPoint);
+		
+		//cursorPoint = findEndPoint(startPoint, cursorPoint);
 
 		bulletObjects.push_back(bullet);
 		if (bulletObjects.size() > ammoAmount) {
@@ -170,7 +168,7 @@ void MyFramework::onKeyPressed(FRKey k) {
 
 	for (auto& enemy : enemyObjects) {
 		auto traj = enemy->removeTrajectory();
-		traj->setSegment(enemy->mapPosition(), Rectangle{ *playerObject }.center(), 8);
+		traj->setSegment(enemy->mapPosition(), Rectangle{ *playerObject }.center());
 		enemy->setTrajectory(traj);
 	}
 }

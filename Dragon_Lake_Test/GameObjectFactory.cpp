@@ -9,6 +9,8 @@
 #include "MapArea.h"
 #include "ScreenArea.h"
 
+#include "LinearTrajectoryGenerator.h"
+
 #include "Rectangle.h"
 
 GameObjectFactory::GameObjectFactory(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea): 
@@ -20,8 +22,12 @@ EnemyObject* GameObjectFactory::createEnemyObject(Point position) const {
 	return enemy;
 }
 
-BulletObject* GameObjectFactory::createBulletObject() const {
+BulletObject* GameObjectFactory::createBulletObject(Point startPoint, Point cursorPoint) const {
 	auto bullet = new BulletObject(mapArea, screenArea);
+	auto trajectory = new LinearTrajectoryGenerator;
+	trajectory->setSegment(startPoint, cursorPoint);
+	bullet->setPosition(startPoint);
+	bullet->setTrajectory(trajectory);
 	return bullet;
 }
 

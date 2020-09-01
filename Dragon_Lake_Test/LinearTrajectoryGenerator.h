@@ -11,7 +11,7 @@ class LinearTrajectoryGenerator
 {
 public:
 
-	void setSegment(Point start, Point end, int precision);
+	void setSegment(Point start, Point end);
 	Point advance();
 	Point next() const;
 

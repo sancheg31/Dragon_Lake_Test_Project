@@ -4,11 +4,13 @@
 #include <algorithm>
 #include <iostream>
 
-void LinearTrajectoryGenerator::setSegment(Point startp, Point endp, int precision) {
+void LinearTrajectoryGenerator::setSegment(Point startp, Point endp) {
 	
 	startPoint = startp;
 	endPoint = endp;
 	currentPoint = startPoint;
+
+	int precision = 8;
 	
 	int m = 1 << precision;
 	long mask = m - 1;
