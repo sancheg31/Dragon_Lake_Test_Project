@@ -13,6 +13,8 @@
 #include "CSpriteFactory.h"
 #include "GameObjectFactory.h"
 
+#include "DirectionState.h"
+
 #include "Utility.h"
 
 struct CommandLineArgs
@@ -58,6 +60,12 @@ CommandLineArgs parse(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
 
 	auto args = parse(argc, argv);
+
+	DirectionState state(Point{ 1, 1 });
+	state = state.left();
+	while (state.currentDirection() != Point{ 1, 1 }) {
+		state = state.left();
+	}
 
 	GameObject::setSpriteCreator(new CSpriteFactory());
 	std::shared_ptr<MapArea> map = std::make_shared<MapArea>(args.mapDim);

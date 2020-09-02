@@ -15,7 +15,8 @@ void EnemySpawner::removeProhibitZone(GameObject* object) {
 }
 
 std::list<EnemyObject*> EnemySpawner::generate(PlayerObject* player, int amount) {
-
+	
+	int counter = 0;
 	std::list<EnemyObject*> objects;
 
 	std::random_device rd;
@@ -34,7 +35,7 @@ std::list<EnemyObject*> EnemySpawner::generate(PlayerObject* player, int amount)
 
 		objects.push_back(enemy);
 		addProhibitZone(enemy, 1.0);
-
+		std::cout << "enemy number " << counter++ << "is generated\n";
 	}
 
 	return objects;

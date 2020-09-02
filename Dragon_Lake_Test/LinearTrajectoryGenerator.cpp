@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include "DirectionState.h"
+
 void LinearTrajectoryGenerator::setSegment(Point startp, Point endp) {
 	
 	startPoint = startp;
@@ -55,6 +57,31 @@ void LinearTrajectoryGenerator::setSegment(Point startp, Point endp) {
 	a = abs(u + u) - b;
 	signX = sign(signX);
 	signY = sign(signY);
+}
+
+std::pair<DirectionState, DirectionState> LinearTrajectoryGenerator::possibleStates() const {
+	std::pair<DirectionState, DirectionState> p{ {{}}, {{}} };
+	if (xPrevails) {
+		if ((signX > 0 && signY > 0) || (signX < 0 && signY < 0)) {
+			p.first = DirectionState{ Point{signX, 0} };
+			p.second = DirectionState{ Point{signX, signY} };
+		}
+		else {
+			p.first = DirectionState{ Point{signX, signY} };
+			p.second = DirectionState{ Point{signX, 0} };
+		}
+	}
+	else {
+		if ((signX > 0 && signY < 0) || (signX < 0 && signY > 0)) {
+			p.first = DirectionState{ Point{0, signY} };
+			p.second = DirectionState{ Point{signX, signY} };
+		}
+		else {
+			p.second = DirectionState{ Point{0, signY} };
+			p.first = DirectionState{ Point{signX, signY} };
+		}
+	}
+	return p;
 }
 
 Point LinearTrajectoryGenerator::advance() {

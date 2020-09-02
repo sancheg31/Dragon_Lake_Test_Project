@@ -14,6 +14,7 @@
 #include "MapArea.h"
 
 #include "EnemySpawner.h"
+#include "EnemyAdvancer.h"
 
 #include "GameObjectFactory.h"
 #include "CSpriteFactory.h"
@@ -41,21 +42,7 @@ bool MyFramework::Init() {
 	enemySpawner = new EnemySpawner(objectFactory, mapArea->size() - CSpriteFactory::spriteSize("enemy"));
 	enemySpawner->addProhibitZone(playerObject, 4);
 	
-	enemyObjects = enemySpawner->generate(playerObject, 500);
-
-	/*auto enemy1 = objectFactory->createEnemyObject(Point{ 20, 20 });
-	auto trajectory1 = new LinearTrajectoryGenerator();
-	trajectory1->setSegment(Rectangle{ *enemy1 }.center(), Rectangle{ *playerObject }.center());
-	enemy1->setTrajectory(trajectory1);
-	enemyObjects.push_back(enemy1);
-
-	auto enemy2 = objectFactory->createEnemyObject(Point{ 22, 22 });
-	auto trajectory2 = new LinearTrajectoryGenerator();
-	trajectory2->setSegment(Rectangle{ *enemy2 }.center(), Rectangle{ *playerObject }.center());
-	enemy2->setTrajectory(trajectory2);
-	enemyObjects.push_back(enemy2);*/
-
-	std::cout << "enemy count: " << enemyObjects.size();
+	//enemyObjects = enemySpawner->generate(playerObject, 20);
 
 	showCursor(false);
 
@@ -83,11 +70,6 @@ void MyFramework::restart() {
 	Init();
 }
 
-#include <cmath>
-double distance(Point p1, Point p2) {
-	auto p = p1 - p2;
-	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-}
 
 bool MyFramework::Tick() {
 
@@ -133,80 +115,23 @@ bool MyFramework::Tick() {
 		}
 	}
 
-	//chooses which bullet advances and which halts
-	std::list<std::pair<EnemyObject*, bool>> advancedList;
-
-	std::transform(enemyObjects.begin(), enemyObjects.end(), std::back_inserter(advancedList), [](auto enemy) {
-		return std::pair{ enemy, true };
-	});
-
-	for (auto iter1 = advancedList.begin(); iter1 != advancedList.end(); ++iter1) {
-		EnemyObject* enemy1 = iter1->first;
-		Rectangle rect1{ enemy1->next(), enemy1->size(), VertexPosition::UP_LEFT };
-
-		std::list<EnemyObject*> collideList{ enemy1 };
-
-		{
-			auto iter2 = iter1;
-			++iter2;
-			for (; iter2 != advancedList.end(); ++iter2) {
-				EnemyObject* enemy2 = iter2->first;
-				Rectangle rect2{ enemy2->next(), enemy2->size(), VertexPosition::UP_LEFT };
-
-				if (rect2.isCollide(rect1)) {
-					collideList.push_back(enemy2);
-				}
-			}
-		}
-
-		if (collideList.size() > 1) {
-			if (ticks >= 20)
-				std::cout << "Collide\n";
-			EnemyObject* obj = *collideList.begin();
-			double dist = distance(Rectangle{ obj->next(), obj->size(), VertexPosition::UP_LEFT }.center(), 
-									Rectangle{ *playerObject }.center());
-
-			//find object that moves
-			for (auto iter = collideList.begin(); iter != collideList.end(); ++iter) {
-				auto objj = *iter;
-				Rectangle rect{ objj->next(), objj->size(), VertexPosition::UP_LEFT };
-				double temp = distance(rect.center(), Rectangle{ *playerObject }.center());
-				if (temp < dist) {
-					obj = (*iter);
-					dist = temp;
-				}
-			}
-			
-			//set states for all halted objects
-			auto iterAdvanced = iter1;
-			for (auto iterCollide = collideList.begin(); iterCollide != collideList.end() && iterAdvanced != advancedList.end(); ++iterAdvanced) {
-				if (iterAdvanced->first == *iterCollide) {
-					if (iterAdvanced->first != obj) {
-						iterAdvanced->second = false;
-					}
-					++iterCollide;
-				}
-			}
-		}
-
+	if (ticks == 20) {
+		EnemyAdvancer* advancer = new EnemyAdvancer(playerObject, enemyObjects);
+		advancer->advance();
 	}
-
-	std::for_each(advancedList.begin(), advancedList.end(), [](auto pair) {
-		if (pair.second)
-			pair.first->advance();
-	});
-
-
 
 	for (auto& enemy : enemyObjects) {
-		if (ticks >= 20) {
-			std::cout << enemy->mapPosition().x << " " << enemy->mapPosition().y << " ";
+		if (ticks == 20) {
+			//std::cout << enemy->mapPosition().x << " " << enemy->mapPosition().y << " ";
 		}
-		//enemy->advance();
+		enemy->advance();
 		enemy->draw();
 	}
-	if (ticks >= 20) {
-		std::cout << '\n';
+
+	
+
+	if (ticks == 20) {
+		//std::cout << '\n';
 	}
 
 	for (auto& bullet : bulletObjects) {

@@ -2,8 +2,13 @@
 
 #include "Utility.h"
 
+#include <utility>
+
+
+class DirectionState;
+
 template <typename T>
-T sign(T val) {
+int sign(T val) {
 	return (T(0) < val) - (T(0) > val);
 }
 
@@ -14,6 +19,8 @@ public:
 	void setSegment(Point start, Point end);
 	Point advance();
 	Point next() const;
+
+	std::pair<DirectionState, DirectionState> possibleStates() const;
 
 private:
 
