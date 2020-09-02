@@ -15,6 +15,7 @@ class EnemyObject;
 class BulletObject;
 
 class EnemySpawner;
+class EnemyAdvancePolicy;
 
 class GameObjectFactory;
 
@@ -57,6 +58,7 @@ private:
 	PlayerObject* playerObject;
 	CursorObject* cursorObject;
 	EnemySpawner* enemySpawner;
+	EnemyAdvancePolicy* advancePolicy;
 
 	int enemyCount;
 

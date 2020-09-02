@@ -14,7 +14,7 @@
 #include "MapArea.h"
 
 #include "EnemySpawner.h"
-#include "EnemyAdvancer.h"
+#include "EnemyAdvancePolicy.h"
 
 #include "GameObjectFactory.h"
 #include "CSpriteFactory.h"
@@ -41,11 +41,9 @@ bool MyFramework::Init() {
 	
 	enemySpawner = new EnemySpawner(objectFactory, mapArea->size() - CSpriteFactory::spriteSize("enemy"));
 	enemySpawner->addProhibitZone(playerObject, 4);
-
-	//enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 20, 20 }, playerObject));
-	//enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 56, 20 }, playerObject));
-	
 	enemyObjects = enemySpawner->generate(playerObject, enemyCount);
+
+	advancePolicy = new EnemyAdvancePolicy(playerObject, 5);
 
 	showCursor(false);
 	/*
@@ -57,6 +55,8 @@ bool MyFramework::Init() {
 
 void MyFramework::Close() {
 	delete enemySpawner;
+	delete advancePolicy;
+
 	delete playerObject;
 	delete cursorObject;
 
@@ -75,9 +75,6 @@ void MyFramework::restart() {
 
 
 bool MyFramework::Tick() {
-
-	static int ticks = 0;
-	++ticks;
 
 	drawTestBackground();
 	Rectangle playerRect{ playerObject };
@@ -117,11 +114,7 @@ bool MyFramework::Tick() {
 		}
 	}
 
-	if (ticks == 20) {
-		EnemyAdvancer* advancer = new EnemyAdvancer(playerObject, enemyObjects);
-		advancer->advance();
-		delete advancer;
-	}
+	advancePolicy->advance(enemyObjects);
 
 	for (auto& enemy : enemyObjects) {
 		enemy->draw();
@@ -133,10 +126,6 @@ bool MyFramework::Tick() {
 	}
 	playerObject->draw();
 	cursorObject->draw();
-
-	if (ticks == 20) {
-		ticks = 0;
-	}
 
 	return false;
 }

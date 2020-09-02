@@ -72,7 +72,7 @@
     <ClCompile Include="DirectionState.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyAdvancer.cpp">
+    <ClCompile Include="EnemyAdvancePolicy.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,7 +134,7 @@
     <ClInclude Include="DirectionState.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyAdvancer.h">
+    <ClInclude Include="EnemyAdvancePolicy.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
