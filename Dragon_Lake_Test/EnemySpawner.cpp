@@ -28,9 +28,9 @@ std::list<EnemyObject*> EnemySpawner::generate(PlayerObject* player, int amount)
 
 		Point position = generateUniquePoint(engine, distWidth, distHeight);
 
-		EnemyObject* enemy = objectFactory->createEnemyObject(position, player);
+		EnemyObject* enemy = objectFactory->createEnemyObject(position);
 		auto trajectory = new LinearTrajectoryGenerator();
-		trajectory->setSegment(Rectangle{ *enemy }.center(), Rectangle{ *player }.center());
+		trajectory->setSegment(enemy->mapPosition(), Rectangle{ *player }.center());
 		enemy->setTrajectory(trajectory);
 
 		objects.push_back(enemy);

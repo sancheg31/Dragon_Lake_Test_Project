@@ -18,8 +18,7 @@ class EnemyAdvancer
 	struct ExEnemyObject
 	{
 		EnemyObject* enemy;
-		DirectionState leftState;
-		DirectionState rightState;
+		DirectionState currentState;
 	};
 
 	using container_type = std::list<ExEnemyObject>;
@@ -38,8 +37,7 @@ private:
 	Rectangle twoPixelBoundary(GameObject* object);
 
 
-	std::pair<container_type, typename container_type::iterator> 
-		findCollidedObjects(typename container_type::iterator start, Rectangle boundary);
+	container_type findCollidedObjects(typename container_type::iterator start, Rectangle boundary);
 
 
 	PlayerObject* player;

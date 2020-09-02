@@ -1,8 +1,5 @@
 #pragma once
 
-
-#include <cmath>
-
 struct Point;
 struct Size;
 
@@ -22,12 +19,6 @@ struct Size
 		return Point{ width, height };
 	}
 };
-
-/*
-double distance(Point p1, Point p2) {
-	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-}
-*/
 
 inline Point operator+(const Point& p1, const Point& p2) {
 	return Point{ p1.x + p2.x, p1.y + p2.y };

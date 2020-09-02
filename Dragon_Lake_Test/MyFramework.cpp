@@ -42,10 +42,10 @@ bool MyFramework::Init() {
 	enemySpawner = new EnemySpawner(objectFactory, mapArea->size() - CSpriteFactory::spriteSize("enemy"));
 	enemySpawner->addProhibitZone(playerObject, 4);
 
-	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 20, 20 }, playerObject));
-	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 56, 20 }, playerObject));
+	//enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 20, 20 }, playerObject));
+	//enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 56, 20 }, playerObject));
 	
-	//enemyObjects = enemySpawner->generate(playerObject, 20);
+	enemyObjects = enemySpawner->generate(playerObject, 50);
 
 	showCursor(false);
 
@@ -81,6 +81,10 @@ bool MyFramework::Tick() {
 
 	drawTestBackground();
 	Rectangle playerRect{ *playerObject };
+
+	/*if (ticks == 20 && Rectangle{ **enemyObjects.begin() }.isCollide(Rectangle{ **++enemyObjects.begin() })) {
+		std::cout << "objects collide\n";
+	}*/
 	
 	//bullet-enemy collide
 	//TODO
@@ -93,7 +97,7 @@ bool MyFramework::Tick() {
 				isCollided = true;
 				delete *iter2;
 				iter2 = enemyObjects.erase(iter2);
-				std::cout << "enemies left: " << enemyObjects.size() << '\n';
+				//std::cout << "enemies left: " << enemyObjects.size() << '\n';
 			}
 			else {
 				++iter2;
@@ -118,23 +122,17 @@ bool MyFramework::Tick() {
 		}
 	}
 
+
+
 	if (ticks == 20) {
 		EnemyAdvancer* advancer = new EnemyAdvancer(playerObject, enemyObjects);
 		advancer->advance();
+		delete advancer;
 	}
+
 
 	for (auto& enemy : enemyObjects) {
-		if (ticks == 20) {
-			//std::cout << enemy->mapPosition().x << " " << enemy->mapPosition().y << " ";
-		}
-		enemy->advance();
 		enemy->draw();
-	}
-
-	
-
-	if (ticks == 20) {
-		//std::cout << '\n';
 	}
 
 	for (auto& bullet : bulletObjects) {
@@ -144,8 +142,9 @@ bool MyFramework::Tick() {
 	playerObject->draw();
 	cursorObject->draw();
 
-	if (ticks == 20)
+	if (ticks == 20) {
 		ticks = 0;
+	}
 
 	return false;
 }
@@ -184,6 +183,7 @@ void MyFramework::onKeyPressed(FRKey k) {
 		break;
 	}
 
+	//std::cout << "make new trajectories\n";
 	for (auto& enemy : enemyObjects) {
 		auto traj = enemy->removeTrajectory();
 		traj->setSegment(enemy->mapPosition(), Rectangle{ *playerObject }.center());
