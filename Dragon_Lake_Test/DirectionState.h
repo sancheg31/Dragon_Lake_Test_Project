@@ -5,12 +5,8 @@
 #include "LinearTrajectoryGenerator.h"
 #include "Utility.h"
 
-#include <cmath>
 
 
-double distance(Point p1, Point p2) {
-	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-}
 
 struct Rotation
 {
@@ -34,6 +30,10 @@ public:
 		auto p = Point{ (int)(state.x * rightRotation.x1 + state.y * rightRotation.y1),
 						(int)(state.x * rightRotation.x2 + state.y * rightRotation.y2)};
 		return normalize(p);
+	}
+
+	Point currentDirection() const {
+		return state;
 	}
 
 private:
