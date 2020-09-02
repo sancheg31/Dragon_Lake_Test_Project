@@ -1,5 +1,13 @@
 #include "EnemyAdvancer.h"
 
+#include <algorithm>
+#include <iterator>
+
+#include "Rectangle.h"
+
+#include "GameObject.h"
+#include "PlayerObject.h"
+#include "EnemyObject.h"
 
 double distance(Point p1, Point p2) {
 	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
@@ -7,8 +15,8 @@ double distance(Point p1, Point p2) {
 
 EnemyAdvancer::EnemyAdvancer(PlayerObject* pl, std::list<EnemyObject*> obj) : player(pl) {
 	obj.sort([pl](auto enemy1, auto enemy2) {
-		double dist1 = distance(Rectangle{ *pl }.center(), Rectangle{ *enemy1 }.center());
-		double dist2 = distance(Rectangle{ *pl }.center(), Rectangle{ *enemy2 }.center());
+		double dist1 = distance(centerPoint(pl), centerPoint(enemy1));
+		double dist2 = distance(centerPoint(pl), centerPoint(enemy2));
 		return dist1 < dist2;
 	});
 
@@ -25,9 +33,6 @@ void EnemyAdvancer::advance() {
 	for (auto iter = objects.begin(); iter != objects.end(); ++iter) {
 
 		auto collided = findCollidedObjects(iter, twoPixelBoundary(iter->enemy));
-		//std::cout << "New Coords: " << twoPixelBoundary(iter->enemy).upLeft().x << " " << twoPixelBoundary(iter->enemy).upLeft().y << '\n';
-		//std::cout << "Collided objects: " << collided.size() << '\n';
-		//std::cout << "checkpoint 1\n";
 
 		std::vector<Rectangle> newPositions;
 		std::transform(collided.begin(), collided.end(), std::back_inserter(newPositions), [](auto exEnemy) {
@@ -37,8 +42,6 @@ void EnemyAdvancer::advance() {
 
 		bool accepted = false;
 		Point stopPoint = iter->currentState.currentDirection();
-
-		//std::cout << "checkpoint 2\n";
 
 		while (!accepted) {
 
@@ -66,21 +69,15 @@ void EnemyAdvancer::advance() {
 		}
 	}
 
-	
-
 	for (auto iter = objects.begin(); iter != objects.end(); ++iter) {
 		auto exEnemy = *iter;
 		auto [enemy, dir] = exEnemy;
 
 		auto traj = enemy->removeTrajectory();
 		enemy->move(dir.currentDirection());
-		traj->setSegment(enemy->mapPosition(), objectCenter(player));
+		traj->setSegment(enemy->mapPosition(), centerPoint(player));
 		enemy->setTrajectory(traj);
 	}
-}
-
-Point EnemyAdvancer::objectCenter(GameObject* object) {
-	return Rectangle{ *object }.center();
 }
 
 Point EnemyAdvancer::nextObjectCenter(Advanceable* object, Size size) {
@@ -100,7 +97,7 @@ auto EnemyAdvancer::findCollidedObjects(typename container_type::iterator start,
 
 	for (auto iter = objects.begin(); iter != objects.end(); ++iter) {
 
-		Rectangle rect{ *iter->enemy };
+		Rectangle rect{ iter->enemy };
 		inBoundaries = boundary.isCollide(rect);
 
 		if (inBoundaries && iter != start)

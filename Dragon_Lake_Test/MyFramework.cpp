@@ -45,13 +45,13 @@ bool MyFramework::Init() {
 	//enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 20, 20 }, playerObject));
 	//enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 56, 20 }, playerObject));
 	
-	enemyObjects = enemySpawner->generate(playerObject, 50);
+	enemyObjects = enemySpawner->generate(playerObject, enemyCount);
 
 	showCursor(false);
-
+	/*
 	std::cout << playerObject->mapPosition().x << " " << playerObject->mapPosition().y << '\n';
 	std::cout << screenArea->currentShift().x << " " << screenArea->currentShift().y << '\n';
-
+	*/
 	return true;
 }
 
@@ -80,24 +80,19 @@ bool MyFramework::Tick() {
 	++ticks;
 
 	drawTestBackground();
-	Rectangle playerRect{ *playerObject };
-
-	/*if (ticks == 20 && Rectangle{ **enemyObjects.begin() }.isCollide(Rectangle{ **++enemyObjects.begin() })) {
-		std::cout << "objects collide\n";
-	}*/
+	Rectangle playerRect{ playerObject };
 	
 	//bullet-enemy collide
 	//TODO
 	for (auto iter = bulletObjects.begin(); iter != bulletObjects.end(); ) {
-		Rectangle bulletRect{ **iter };
+		Rectangle bulletRect{ *iter };
 		bool isCollided = false;
 		for (auto iter2 = enemyObjects.begin(); iter2 != enemyObjects.end(); ) {
-			Rectangle enemyRect{ **iter2 };
+			Rectangle enemyRect{ *iter2 };
 			if (bulletRect.isCollide(enemyRect) || enemyRect.isCollide(bulletRect)) {
 				isCollided = true;
 				delete *iter2;
 				iter2 = enemyObjects.erase(iter2);
-				//std::cout << "enemies left: " << enemyObjects.size() << '\n';
 			}
 			else {
 				++iter2;
@@ -115,21 +110,18 @@ bool MyFramework::Tick() {
 
 	//game restarts
 	for (auto& enemy : enemyObjects) {
-		Rectangle enemyRect{ *enemy };
+		Rectangle enemyRect{ enemy };
 		if (playerRect.isCollide(enemyRect)) {
 			restart();
 			return false;
 		}
 	}
 
-
-
 	if (ticks == 20) {
 		EnemyAdvancer* advancer = new EnemyAdvancer(playerObject, enemyObjects);
 		advancer->advance();
 		delete advancer;
 	}
-
 
 	for (auto& enemy : enemyObjects) {
 		enemy->draw();
@@ -158,8 +150,9 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 	if (!isReleased) {
 
 		auto bulletSize = (Point)CSpriteFactory::spriteSize("bullet");
-		Point startPoint = Rectangle{ *playerObject }.center() - bulletSize / 2;
-		Point cursorPoint = Rectangle{ *cursorObject }.center() - bulletSize / 2;
+
+		Point startPoint = centerPoint(playerObject) - bulletSize / 2;
+		Point cursorPoint = centerPoint(cursorObject) - bulletSize / 2;
 
 		auto bullet = objectFactory->createBulletObject(startPoint, cursorPoint);
 		bulletObjects.addBullet(bullet);
@@ -183,10 +176,9 @@ void MyFramework::onKeyPressed(FRKey k) {
 		break;
 	}
 
-	//std::cout << "make new trajectories\n";
 	for (auto& enemy : enemyObjects) {
 		auto traj = enemy->removeTrajectory();
-		traj->setSegment(enemy->mapPosition(), Rectangle{ *playerObject }.center());
+		traj->setSegment(enemy->mapPosition(), centerPoint(playerObject));
 		enemy->setTrajectory(traj);
 	}
 }

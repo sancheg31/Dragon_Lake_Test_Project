@@ -16,7 +16,7 @@ public:
 	ScreenArea(ScreenArea&&) = default;
 	~ScreenArea() = default;
 
-	Point calculateScreenShift(std::shared_ptr<MapArea> area, const PlayerObject& playerObject) const;
+	Point calculateScreenShift(std::shared_ptr<MapArea> area, PlayerObject* playerObject) const;
 	Point currentShift() const;
 	Size size() const;
 

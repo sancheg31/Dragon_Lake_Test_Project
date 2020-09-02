@@ -1,6 +1,8 @@
 
 #include "Rectangle.h"
 
+#include <cmath>
+
 #include "GameObject.h"
 
 struct Rectangle::Projection
@@ -31,7 +33,7 @@ Rectangle::Rectangle(Point p, Size dim, VertexPosition position) {
 	}
 }
 
-Rectangle::Rectangle(const GameObject& object) : Rectangle(object.mapPosition(), object.size(), VertexPosition::UP_LEFT) { }
+Rectangle::Rectangle(GameObject* object) : Rectangle(object->mapPosition(), object->size(), VertexPosition::UP_LEFT) { }
 
 void Rectangle::constructFromUpperLeft(Point p, Size dimensions) {
 	upLeft_ = p;
@@ -73,4 +75,27 @@ Point Rectangle::downRight() const {
 
 Point Rectangle::downLeft() const {
 	return Point{ upLeft_.x, downRight_.y };
+}
+
+int Rectangle::width() const {
+	return std::abs(downRight_.x - upLeft_.x);
+}
+
+int Rectangle::height() const {
+	return std::abs(downRight_.y - upLeft_.y);
+}
+
+Size Rectangle::size() const {
+	return Size{ width(), height() };
+}
+
+Point centerPoint(GameObject* object) {
+	return Rectangle{ object }.center();
+}
+
+Rectangle scale(Rectangle rect, double multiplier) {
+	auto [x, y] = rect.center();
+	Point newUpperLeft = Point{ (int)(x - rect.width() * multiplier / 2), (int)(y - rect.height() * multiplier / 2) };
+	Size newSize = Size{ (int)(rect.width() * multiplier), (int)(rect.height() * multiplier) };
+	return Rectangle{ newUpperLeft, newSize, VertexPosition::UP_LEFT };
 }

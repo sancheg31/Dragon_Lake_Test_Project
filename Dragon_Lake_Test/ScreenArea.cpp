@@ -6,12 +6,12 @@
 
 ScreenArea::ScreenArea(Size screenDim) : screenDimensions(screenDim) { }
 
-Point ScreenArea::calculateScreenShift(std::shared_ptr<MapArea> mapArea, const PlayerObject& playerObject) const {
-	if (currentPlayerPosition != playerObject.mapPosition()) {
+Point ScreenArea::calculateScreenShift(std::shared_ptr<MapArea> mapArea, PlayerObject* playerObject) const {
+	if (currentPlayerPosition != playerObject->mapPosition()) {
 
-		currentPlayerPosition = playerObject.mapPosition();
+		currentPlayerPosition = playerObject->mapPosition();
 
-		Point centerPlayer = Rectangle{ playerObject }.center();
+		Point centerPlayer = centerPoint(playerObject);
 
 		upLeftScreenVertex = centerPlayer - (Point)screenDimensions / 2;
 		Point downRightScreenVertex = centerPlayer + (Point)screenDimensions / 2; 

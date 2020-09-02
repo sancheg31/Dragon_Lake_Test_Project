@@ -17,7 +17,7 @@ class Rectangle
 public:
 
 	Rectangle(Point p, Size dim, VertexPosition position);
-	Rectangle(const GameObject& object);
+	Rectangle(GameObject* object);
 
 	Rectangle(const Rectangle&) = default;
 	Rectangle(Rectangle&&) = default;
@@ -36,6 +36,11 @@ public:
 	Point downRight() const;
 	Point downLeft() const;
 
+	int width() const;
+	int height() const;
+
+	Size size() const;
+
 private:
 
 	void constructFromUpperLeft(Point p, Size dimensions);
@@ -47,3 +52,6 @@ private:
 	
 };
 
+Point centerPoint(GameObject* object);
+
+Rectangle scale(Rectangle rect, double multiplier);

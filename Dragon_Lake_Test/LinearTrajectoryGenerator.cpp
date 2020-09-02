@@ -8,23 +8,23 @@
 
 void LinearTrajectoryGenerator::setSegment(Point startp, Point endp) {
 	
-	startPoint = startp;
-	endPoint = endp;
-	currentPoint = startPoint;
+	startPoint_ = startp;
+	endPoint_ = endp;
+	currentPoint_ = startPoint_;
 
 	int precision = 8;
 	
 	int m = 1 << precision;
 	long mask = m - 1;
 
-	Point startPointN = startPoint * m; 
-	Point endPointN = endPoint * m;
+	Point startPointN = startPoint_ * m; 
+	Point endPointN = endPoint_ * m;
 
-	signX = endPoint.x - startPoint.x;
-	signY = endPoint.y - startPoint.y;
+	signX = endPoint_.x - startPoint_.x;
+	signY = endPoint_.y - startPoint_.y;
 
 	
-	steps = std::max(labs(endPoint.x - startPoint.x), labs(endPoint.y - startPoint.y));
+	steps = std::max(labs(endPoint_.x - startPoint_.x), labs(endPoint_.y - startPoint_.y));
 
 	Point maskedStartPoint = { startPointN.x & mask, startPointN.y & mask };
 
@@ -59,30 +59,6 @@ void LinearTrajectoryGenerator::setSegment(Point startp, Point endp) {
 	signY = sign(signY);
 }
 
-std::pair<DirectionState, DirectionState> LinearTrajectoryGenerator::possibleStates() const {
-	std::pair<DirectionState, DirectionState> p{ {{}}, {{}} };
-	if (xPrevails) {
-		if ((signX > 0 && signY > 0) || (signX < 0 && signY < 0)) {
-			p.first = DirectionState{ Point{signX, 0} };
-			p.second = DirectionState{ Point{signX, signY} };
-		}
-		else {
-			p.first = DirectionState{ Point{signX, signY} };
-			p.second = DirectionState{ Point{signX, 0} };
-		}
-	}
-	else {
-		if ((signX > 0 && signY < 0) || (signX < 0 && signY > 0)) {
-			p.first = DirectionState{ Point{0, signY} };
-			p.second = DirectionState{ Point{signX, signY} };
-		}
-		else {
-			p.second = DirectionState{ Point{0, signY} };
-			p.first = DirectionState{ Point{signX, signY} };
-		}
-	}
-	return p;
-}
 
 Point LinearTrajectoryGenerator::advance() {
 	if (xPrevails) {
@@ -97,39 +73,52 @@ Point LinearTrajectoryGenerator::advance() {
 		else
 			moveXY();
 	}
-	return currentPoint;
+	return currentPoint_;
 }
 
 Point LinearTrajectoryGenerator::next() const {
 	if (xPrevails) {
 		if (d0 < 0)
-			return Point{ currentPoint.x + signX, currentPoint.y };
+			return Point{ currentPoint_.x + signX, currentPoint_.y };
 		else
-			return Point{ currentPoint.x + signX, currentPoint.y + signY };
+			return Point{ currentPoint_.x + signX, currentPoint_.y + signY };
 	}
 	else {
 		if (d0 < 0)
-			return Point{ currentPoint.x, currentPoint.y + signY };
+			return Point{ currentPoint_.x, currentPoint_.y + signY };
 		else
-			return Point{ currentPoint.x + signX, currentPoint.y + signY };
+			return Point{ currentPoint_.x + signX, currentPoint_.y + signY };
 	}
 }
 
 void LinearTrajectoryGenerator::moveX() {
 	d0 += b;
-	currentPoint.x += signX;
+	currentPoint_.x += signX;
 	--steps;
 }
 
 void LinearTrajectoryGenerator::moveY() {
 	d0 += b;
-	currentPoint.y += signY;
+	currentPoint_.y += signY;
 	--steps;
 }
 
 void LinearTrajectoryGenerator::moveXY() {
 	d0 -= a;
-	currentPoint.y += signY;
-	currentPoint.x += signX;
+	currentPoint_.y += signY;
+	currentPoint_.x += signX;
 	--steps;
 }
+
+Point LinearTrajectoryGenerator::currentPoint() const {
+	return currentPoint_;
+}
+
+Point LinearTrajectoryGenerator::startPoint() const {
+	return startPoint_;
+}
+
+Point LinearTrajectoryGenerator::endPoint() const {
+	return endPoint_;
+}
+

@@ -4,7 +4,7 @@ EnemySpawner::EnemySpawner(std::shared_ptr<GameObjectFactory> factory, Size dims
 	objectFactory(factory), dimensions(dims) { }
 
 void EnemySpawner::addProhibitZone(GameObject* object, double threshold) {
-	prohibits.push_back({ object, threshold });
+	prohibits.push_back(value_type{ object, threshold });
 }
 
 void EnemySpawner::removeProhibitZone(GameObject* object) {
@@ -30,24 +30,15 @@ std::list<EnemyObject*> EnemySpawner::generate(PlayerObject* player, int amount)
 
 		EnemyObject* enemy = objectFactory->createEnemyObject(position);
 		auto trajectory = new LinearTrajectoryGenerator();
-		trajectory->setSegment(enemy->mapPosition(), Rectangle{ *player }.center());
+		trajectory->setSegment(enemy->mapPosition(), centerPoint(player));
 		enemy->setTrajectory(trajectory);
 
 		objects.push_back(enemy);
 		addProhibitZone(enemy, 1.0);
-		std::cout << "enemy number " << counter++ << "is generated\n";
+		//std::cout << "enemy number " << counter++ << "is generated\n";
 	}
 
 	return objects;
-}
-
-Rectangle EnemySpawner::findProhibitArea(GameObject* object, double threshold) const {
-	auto [width, height] = object->size();
-	Point enhancer = Point{ (int)(threshold * width / 2), (int)(threshold * height / 2) };
-
-	Point upperLeft = object->mapPosition() + (Point)object->size() / 2 - enhancer;
-	Size size = Size{ (int)(threshold * width), (int)(threshold * height) };
-	return Rectangle{ upperLeft, size, VertexPosition::UP_LEFT };
 }
 
 bool EnemySpawner::isUniquePoint(Point p) const {
@@ -60,4 +51,16 @@ bool EnemySpawner::isUniquePoint(Point p) const {
 			unique = false;
 	}
 	return unique;
+}
+
+Rectangle EnemySpawner::findProhibitArea(GameObject* object, double threshold) const {
+	Rectangle objectRect{ object };
+	return scale(objectRect, threshold);
+	/*
+	auto [width, height] = object->size();
+	Point enhancer = Point{ (int)(threshold * width / 2), (int)(threshold * height / 2) };
+
+	Point upperLeft = object->mapPosition() + (Point)object->size() / 2 - enhancer;
+	Size size = Size{ (int)(threshold * width), (int)(threshold * height) };
+	return Rectangle{ upperLeft, size, VertexPosition::UP_LEFT };*/
 }

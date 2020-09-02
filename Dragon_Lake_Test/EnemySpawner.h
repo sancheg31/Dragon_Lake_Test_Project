@@ -28,7 +28,7 @@ public:
 	void addProhibitZone(GameObject* object, double threshold);
 	void removeProhibitZone(GameObject* object);
 
-	std::list<EnemyObject*> generate(PlayerObject* player, int amount);
+	virtual std::list<EnemyObject*> generate(PlayerObject* player, int amount);
 
 private:
 

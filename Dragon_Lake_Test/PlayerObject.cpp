@@ -13,14 +13,14 @@ PlayerObject::~PlayerObject() { }
 void PlayerObject::setPosition(Point pos) {
 	if (isValidPosition(pos)) {
 		position = pos;
-		screenArea->calculateScreenShift(mapArea, *this);
+		screenArea->calculateScreenShift(mapArea, this);
 	}
 }
 
 void PlayerObject::move(Point pos) {
 	if (isValidPosition(position + pos)) {
 		position = position + pos;
-		screenArea->calculateScreenShift(mapArea, *this);
+		screenArea->calculateScreenShift(mapArea, this);
 	}
 }
 
