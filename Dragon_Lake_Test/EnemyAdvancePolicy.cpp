@@ -4,12 +4,13 @@
 #include <iterator>
 #include <cmath>
 
-
 #include "GameObject.h"
 #include "PlayerObject.h"
 #include "EnemyObject.h"
 
 #include "EnemyStorage.h"
+
+#include "LinearTrajectoryGenerator.h"
 
 #include "Rectangle.h"
 #include "Utility.h"

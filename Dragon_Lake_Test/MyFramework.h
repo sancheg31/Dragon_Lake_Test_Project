@@ -56,10 +56,10 @@ private:
 	std::shared_ptr<MapArea> mapArea;
 	std::shared_ptr<ScreenArea> screenArea;
 	
-	PlayerObject* playerObject;
-	CursorObject* cursorObject;
-	EnemySpawner* enemySpawner;
-	EnemyAdvancePolicy* advancePolicy;
+	PlayerObject* playerObject{ nullptr };
+	CursorObject* cursorObject{ nullptr };
+	EnemySpawner* enemySpawner{ nullptr };
+	EnemyAdvancePolicy* advancePolicy{ nullptr };
 
 	int enemyCount;
 

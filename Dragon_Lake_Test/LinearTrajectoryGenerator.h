@@ -1,16 +1,10 @@
 #pragma once
 
-#include "Utility.h"
-
 #include <utility>
 
+#include "Utility.h"
 
 class DirectionState;
-
-template <typename T>
-int sign(T val) {
-	return (T(0) < val) - (T(0) > val);
-}
 
 class LinearTrajectoryGenerator 
 {

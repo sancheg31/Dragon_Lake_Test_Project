@@ -22,7 +22,6 @@
     <ClCompile Include="Advanceable.cpp" />
     <ClCompile Include="BulletStorage.cpp" />
     <ClCompile Include="BulletObject.cpp" />
-    <ClCompile Include="CollisionChecker.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CSpriteFactory.cpp" />
     <ClCompile Include="CursorObject.cpp" />
@@ -45,7 +44,6 @@
     <ClInclude Include="Advanceable.h" />
     <ClInclude Include="BulletStorage.h" />
     <ClInclude Include="BulletObject.h" />
-    <ClInclude Include="CollisionChecker.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CSpriteFactory.h" />
     <ClInclude Include="CursorObject.h" />

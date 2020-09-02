@@ -54,9 +54,6 @@
     <ClCompile Include="ScreenArea.cpp">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionChecker.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="LinearTrajectoryGenerator.cpp">
       <Filter>Файлы заголовков</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionChecker.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="LinearTrajectoryGenerator.h">
