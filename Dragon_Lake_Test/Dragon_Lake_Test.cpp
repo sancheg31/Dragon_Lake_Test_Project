@@ -5,7 +5,7 @@
 #include <string>
 #include <cstring>
 
-#include "MyFramework.h"
+#include "GameEngine.h"
 
 #include "MapArea.h"
 #include "ScreenArea.h"
@@ -24,6 +24,7 @@ struct CommandLineArgs
 
 	int enemies = 10;
 	int ammo = 3;
+	int ticks = 10;
 };
 
 CommandLineArgs parse(int argc, char* argv[]) {
@@ -35,22 +36,37 @@ CommandLineArgs parse(int argc, char* argv[]) {
 		if (strcmp(argv[i], "-window") == 0) {
 			++i;
 			if (std::cmatch results;  std::regex_match(argv[i], results, dimensions)) {
-				args.mapDim = Size{ std::stoi(results[1]), std::stoi(results[2]) };
+				Size mapDim = Size{ std::stoi(results[1]), std::stoi(results[2]) };
+				if (mapDim.width > 0 && mapDim.height > 0)
+					args.mapDim = mapDim;
 			}
 		}
 		else if (strcmp(argv[i], "-map") == 0) {
 			++i;
 			if (std::cmatch results;  std::regex_match(argv[i], results, dimensions)) {
-				args.windowDim = Size{ std::stoi(results[1]), std::stoi(results[2]) };
+				Size windowDim = Size{ std::stoi(results[1]), std::stoi(results[2]) };
+				if (windowDim.width > 0 && windowDim.height > 0)
+					args.windowDim = windowDim;
 			}
 		}
 		else if (strcmp(argv[i], "-num_enemies") == 0) {
 			++i;
-			args.enemies = std::stoi(argv[i]);
+			int enemies = std::stoi(argv[i]);
+			if (enemies > 0 && enemies < 100)
+				args.enemies = enemies;
 		}
 		else if (strcmp(argv[i], "-num_ammo") == 0) {
 			++i;
-			args.enemies = std::stoi(argv[i]);
+			int ammo = std::stoi(argv[i]);
+			if (ammo > 0)
+				args.ammo = ammo;
+			args.ammo = std::stoi(argv[i]);
+		}
+		else if (strcmp(argv[i], "-ticks") == 0) {
+			++i;
+			int ticks = std::stoi(argv[i]);
+			if (ticks >= 0)
+				args.ticks = ticks;
 		}
 	}
 	return args;
@@ -61,16 +77,10 @@ int main(int argc, char* argv[]) {
 
 	auto args = parse(argc, argv);
 
-	DirectionState state(Point{ 1, 1 });
-	state = state.left();
-	while (state.currentDirection() != Point{ 1, 1 }) {
-		state = state.left();
-	}
-
 	GameObject::setSpriteCreator(new CSpriteFactory());
 	std::shared_ptr<MapArea> map = std::make_shared<MapArea>(args.mapDim);
 	std::shared_ptr<ScreenArea> screen = std::make_shared<ScreenArea>(args.windowDim);
 	std::shared_ptr<GameObjectFactory> factory = std::make_shared<GameObjectFactory>(map, screen);
 	
-	return run(new MyFramework(factory, map, screen, args.enemies, args.ammo));
+	return run(new GameEngine(factory, map, screen, args.enemies, args.ammo, args.ticks));
 }

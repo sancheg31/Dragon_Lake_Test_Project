@@ -3,6 +3,10 @@
 class LinearTrajectoryGenerator;
 struct Point;
 
+/*
+Interface class to distinguish game objects that are able to gradually advance by trajectory.
+*/
+
 class Advanceable
 {
 public:

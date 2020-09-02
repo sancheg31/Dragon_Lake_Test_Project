@@ -1,5 +1,5 @@
 
-#include "MyFramework.h"
+#include "GameEngine.h"
 
 #include <iostream>
 #include <numeric>
@@ -19,21 +19,26 @@
 #include "GameObjectFactory.h"
 #include "CSpriteFactory.h"
 
+#include "LinearTrajectoryGenerator.h"
+
 #include "Rectangle.h"
 
 #include "CSprite.h"
 
-MyFramework::MyFramework(std::shared_ptr<GameObjectFactory> factory, std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea, int enemy, int ammo) : 
-					objectFactory(factory), mapArea(marea), screenArea(sarea), bulletObjects(ammo), enemyCount(enemy) {  }
+GameEngine::GameEngine(std::shared_ptr<GameObjectFactory> factory, 
+						std::shared_ptr<MapArea> marea, 
+						std::shared_ptr<ScreenArea> sarea, 
+						int enemy, int ammo, int ticks) : 
+objectFactory(factory), mapArea(marea), screenArea(sarea), bulletObjects(ammo), enemyCount(enemy), ticksCount(ticks) {  }
 
-void MyFramework::PreInit(int& width, int& height, bool& fullscreen) {
+void GameEngine::PreInit(int& width, int& height, bool& fullscreen) {
 	auto [width_, height_] = screenArea->size();
 	width = width_;
 	height = height_;
 	fullscreen = false;
 }
 
-bool MyFramework::Init() {
+bool GameEngine::Init() {
 	CSpriteFactory::loadResources();
 
 	playerObject = objectFactory->createPlayerObject();
@@ -43,17 +48,14 @@ bool MyFramework::Init() {
 	enemySpawner->addProhibitZone(playerObject, 4);
 	enemyObjects = enemySpawner->generate(playerObject, enemyCount);
 
-	advancePolicy = new EnemyAdvancePolicy(playerObject, 5);
+	advancePolicy = new EnemyAdvancePolicy(playerObject, ticksCount);
 
 	showCursor(false);
-	/*
-	std::cout << playerObject->mapPosition().x << " " << playerObject->mapPosition().y << '\n';
-	std::cout << screenArea->currentShift().x << " " << screenArea->currentShift().y << '\n';
-	*/
+
 	return true;
 }
 
-void MyFramework::Close() {
+void GameEngine::Close() {
 	delete enemySpawner;
 	delete advancePolicy;
 
@@ -65,19 +67,18 @@ void MyFramework::Close() {
 	enemyObjects.clear();
 }
 
-void MyFramework::restart() {
+void GameEngine::restart() {
 	Close();
 	Init();
 }
 
 
-bool MyFramework::Tick() {
+bool GameEngine::Tick() {
 
 	drawTestBackground();
 	Rectangle playerRect{ playerObject };
 	
 	//bullet-enemy collide
-	//TODO
 	for (auto iter = bulletObjects.begin(); iter != bulletObjects.end(); ) {
 		Rectangle bulletRect{ *iter };
 		bool isCollided = false;
@@ -85,6 +86,7 @@ bool MyFramework::Tick() {
 			Rectangle enemyRect{ *iter2 };
 			if (bulletRect.isCollide(enemyRect) || enemyRect.isCollide(bulletRect)) {
 				isCollided = true;
+				enemySpawner->removeProhibitZone(*iter2);
 				iter2 = enemyObjects.erase(iter2);
 			}
 			else {
@@ -100,13 +102,18 @@ bool MyFramework::Tick() {
 		}
 	}
 
-	//game restarts
+	//player-enemy collide
 	for (auto& enemy : enemyObjects) {
 		Rectangle enemyRect{ enemy };
 		if (playerRect.isCollide(enemyRect)) {
 			restart();
 			return false;
 		}
+	}
+	
+	//enemy respawn
+	if (enemyObjects.empty()) {
+		enemyObjects = enemySpawner->generate(playerObject, enemyCount);
 	}
 
 	advancePolicy->advance(enemyObjects);
@@ -125,11 +132,11 @@ bool MyFramework::Tick() {
 	return false;
 }
 
-void MyFramework::onMouseMove(int x, int y, int xrelative, int yrelative) {
+void GameEngine::onMouseMove(int x, int y, int xrelative, int yrelative) {
 	cursorObject->setPosition(Point{ x, y });
 }
 
-void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
+void GameEngine::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 	if (!isReleased) {
 
@@ -144,7 +151,7 @@ void MyFramework::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 	}
 }
 
-void MyFramework::onKeyPressed(FRKey k) {
+void GameEngine::onKeyPressed(FRKey k) {
 	switch (k) {
 	case FRKey::LEFT:
 		playerObject->moveLeft();
@@ -167,4 +174,4 @@ void MyFramework::onKeyPressed(FRKey k) {
 	}
 }
 
-void MyFramework::onKeyReleased(FRKey k) { }
+void GameEngine::onKeyReleased(FRKey k) { }

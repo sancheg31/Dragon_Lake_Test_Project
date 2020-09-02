@@ -10,6 +10,9 @@ class MapArea;
 class CSprite;
 class CSpriteFactory;
 
+/*
+Head of the object hierarchy. Represents object on the game map.
+*/
 class GameObject
 {
 public:

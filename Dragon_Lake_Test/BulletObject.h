@@ -5,6 +5,9 @@
 
 #include <memory>
 
+/*
+Represents bullet objects on the map
+*/
 class BulletObject: public GameObject, public Advanceable
 {
 public:

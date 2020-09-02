@@ -2,6 +2,10 @@
 
 #include "GameObject.h"
 
+/*
+Represents player on the map
+*/
+
 class PlayerObject: public GameObject
 {
 public:

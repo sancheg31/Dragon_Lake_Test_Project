@@ -6,6 +6,10 @@
 
 class DirectionState;
 
+/*
+Represents point movement along the line on pixel field
+Used by BulletObject and EnemyObject
+*/
 class LinearTrajectoryGenerator 
 {
 public:

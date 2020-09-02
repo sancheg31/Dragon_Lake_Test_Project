@@ -5,6 +5,10 @@
 
 class BulletObject;
 
+/*
+Represents container that stores bullet objects.
+Introduced to cover implementation details and move them from GameEngine class
+*/
 class BulletStorage
 {
 	using container_type = std::list<BulletObject*>;
@@ -24,7 +28,10 @@ public:
 	void addBullet(BulletObject*);
 	void clear();
 	
-	
+	std::size_t capacity() const;
+	std::size_t size() const;
+	bool empty() const;
+
 	iterator begin();
 	const_iterator begin() const;
 	iterator end();

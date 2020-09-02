@@ -34,7 +34,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="MapArea.cpp" />
-    <ClCompile Include="MyFramework.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="ScreenArea.cpp" />
@@ -55,7 +55,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="MapArea.h" />
-    <ClInclude Include="MyFramework.h" />
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="ScreenArea.h" />

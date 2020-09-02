@@ -7,6 +7,12 @@
 class MapArea;
 class PlayerObject;
 
+/*
+Represents screen area. Introduced for possible extensions.
+Calculates offset from the map upper left corner.
+Every GameObject shares its object.
+*/
+
 class ScreenArea
 {
 public:

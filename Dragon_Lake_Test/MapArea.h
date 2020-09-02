@@ -2,17 +2,19 @@
 
 #include "Utility.h"
 
+/*
+Represents map. Introduced for extensions. 
+Every GameObject shares its object.
+*/
 class MapArea
 {
 public:
-	MapArea(Size msize) : mapSize(msize) { }
+	MapArea(Size msize);
 	MapArea(const MapArea&) = default;
 	MapArea(MapArea&&) = default;
 	~MapArea() = default;
 
-	Size size() const {
-		return mapSize;
-	}
+	Size size() const;
 
 private:
 	Size mapSize;

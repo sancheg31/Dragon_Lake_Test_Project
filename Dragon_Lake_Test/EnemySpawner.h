@@ -1,20 +1,25 @@
 #pragma once
 
-#include <algorithm>
+
+
 #include <list>
-#include <random>
-#include <iostream>
+#include <utility>
+#include <memory>
 
-#include "EnemyObject.h"
-#include "PlayerObject.h"
-#include "GameObjectFactory.h"
-#include "Rectangle.h"
-#include "CSpriteFactory.h"
+#include "Utility.h"
 
-#include "LinearTrajectoryGenerator.h"
+class GameObject;
+class PlayerObject;
 
+class GameObjectFactory;
 class EnemyStorage;
 
+class Rectangle;
+
+/*
+Spawns given number of enemies randomly on the map.
+Collision-safe.
+*/
 class EnemySpawner
 {
 	using container_type = std::list<std::pair<GameObject*, double>>;

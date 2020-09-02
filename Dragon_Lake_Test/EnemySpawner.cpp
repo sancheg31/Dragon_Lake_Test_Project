@@ -1,7 +1,19 @@
 
 #include "EnemySpawner.h"
 
+#include <algorithm>
+#include <random>
+
+#include "EnemyObject.h"
+#include "PlayerObject.h"
+#include "GameObjectFactory.h"
+
+#include "CSpriteFactory.h"
+#include "LinearTrajectoryGenerator.h"
+
 #include "EnemyStorage.h"
+
+#include "Rectangle.h"
 
 EnemySpawner::EnemySpawner(std::shared_ptr<GameObjectFactory> factory, Size dims) :
 	objectFactory(factory), dimensions(dims) { }
@@ -38,7 +50,6 @@ EnemyStorage EnemySpawner::generate(PlayerObject* player, int amount) {
 
 		objects.addEnemy(enemy);
 		addProhibitZone(enemy, 1.0);
-		//std::cout << "enemy number " << counter++ << "is generated\n";
 	}
 
 	return objects;

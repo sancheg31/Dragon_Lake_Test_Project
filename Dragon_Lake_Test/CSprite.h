@@ -5,6 +5,9 @@ struct Point;
 
 class Sprite;
 
+/*
+Represents wrapper(actually Adapter, but around C-style code) around Sprite object.
+*/
 class CSprite
 {
 public:
@@ -15,7 +18,6 @@ public:
 
 	void draw(Point p);
 	Size size() const;
-
 
 private:
 	Sprite* sprite;

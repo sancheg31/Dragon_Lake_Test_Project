@@ -3,8 +3,12 @@
 #include "GameObject.h"
 #include "Advanceable.h"
 
+
 struct Point;
 
+/*
+Represents enemy object on the map
+*/
 class EnemyObject : public GameObject, public Advanceable
 {
 public:

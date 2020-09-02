@@ -12,6 +12,10 @@ enum class VertexPosition {
 	DOWN_RIGHT
 };
 
+
+/*
+Helper class Rectangle for misc point calculations
+*/
 class Rectangle
 {
 public:

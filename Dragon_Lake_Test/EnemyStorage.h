@@ -5,6 +5,11 @@
 
 class EnemyObject;
 
+
+/*
+Represents container that stores enemy objects. 
+Introduced to cover implementation details and move them from GameEngine class
+*/
 class EnemyStorage
 {
 	using container_type = std::list<EnemyObject*>;
@@ -23,6 +28,8 @@ public:
 	void addEnemy(EnemyObject*);
 	void clear();
 
+	std::size_t size() const;
+	bool empty() const;
 
 	iterator begin();
 	const_iterator begin() const;

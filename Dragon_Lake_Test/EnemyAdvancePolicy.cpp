@@ -51,35 +51,6 @@ void EnemyAdvancePolicy::advance(const EnemyStorage& obj) {
 		DirectionState direction = findDirection(iter->enemy, iter->currentState,collidedRects);
 		iter->currentState = direction;
 
-		/*
-		bool accepted = false;
-		Point stopPoint = iter->currentState.currentDirection();
-
-		
-		while (!accepted) {
-
-			auto exEnemy = *iter;
-
-			Rectangle enemyRect{ exEnemy.enemy->mapPosition() + exEnemy.currentState.currentDirection(),
-				exEnemy.enemy->size(), VertexPosition::UP_LEFT };
-
-			accepted = true;
-			for (auto it = collidedRects.begin(); accepted && it != collidedRects.end(); ++it) {
-				if (it->isCollide(enemyRect)) {
-					accepted = false;
-				//	std::cout << "inside objects collide\n";
-				}
-			}
-
-			if (!accepted) {
-				iter->currentState = iter->currentState.left();
-				if (iter->currentState.currentDirection() == stopPoint) {
-					iter->currentState = DirectionState{ Point{0, 0} };
-					accepted = true;
-				}
-			}
-
-		}*/
 	}
 
 	for (auto iter = objects.begin(); iter != objects.end(); ++iter) {

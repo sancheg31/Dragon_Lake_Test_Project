@@ -23,14 +23,18 @@ class GameObjectFactory;
 class MapArea;
 class ScreenArea;
 
-class MyFramework : public Framework 
+/*
+Main class of the program.
+*/
+
+class GameEngine : public Framework 
 {
 public:
 
-	MyFramework(std::shared_ptr<GameObjectFactory> objectFactory, 
+	GameEngine(std::shared_ptr<GameObjectFactory> objectFactory,
 				std::shared_ptr<MapArea> mapArea, 
 				std::shared_ptr<ScreenArea> screenArea, 
-				int enemy, int ammo);
+				int enemy, int ammo, int ticks);
 
 	virtual void PreInit(int& width, int& height, bool& fullscreen);
 
@@ -62,6 +66,7 @@ private:
 	EnemyAdvancePolicy* advancePolicy{ nullptr };
 
 	int enemyCount;
+	int ticksCount;
 
 	EnemyStorage enemyObjects;
 	BulletStorage bulletObjects;

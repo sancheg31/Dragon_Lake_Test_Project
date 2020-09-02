@@ -12,6 +12,9 @@ public:
 	double y2;
 };
 
+/*
+Helper class to determine unit vectors as a directions.
+*/
 class DirectionState
 {
 public:

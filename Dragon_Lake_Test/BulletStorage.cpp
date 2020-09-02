@@ -37,6 +37,18 @@ void BulletStorage::clear() {
 	cont.clear();
 }
 
+std::size_t BulletStorage::capacity() const {
+	return maxCapacity;
+}
+
+std::size_t BulletStorage::size() const {
+	return cont.size();
+}
+
+bool BulletStorage::empty() const {
+	return cont.empty();
+}
+
 auto BulletStorage::begin() -> iterator {
 	return cont.begin();
 }

@@ -8,6 +8,10 @@ class CSprite;
 
 struct Size;
 
+/*
+Singleton(not actually, but close) factory that loads, stores and releases CSprite objects.
+Stores only one copy of every CSprite.
+*/
 class CSpriteFactory
 {
 public:

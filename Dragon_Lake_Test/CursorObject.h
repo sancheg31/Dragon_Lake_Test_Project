@@ -3,6 +3,11 @@
 #include "GameObject.h"
 #include "Utility.h"
 
+
+/*
+Represents cursor object on the map.
+Introduced for consistency and common approach.
+*/
 class CursorObject: public GameObject
 {
 public:

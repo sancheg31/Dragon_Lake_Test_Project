@@ -3,6 +3,10 @@
 struct Point;
 struct Size;
 
+
+/*
+* Represents pixel coordinates
+*/
 struct Point
 {
 	int x;
@@ -10,6 +14,9 @@ struct Point
 
 };
 
+/*
+* Represents dimensions
+*/
 struct Size
 {
 	int width;
@@ -20,6 +27,7 @@ struct Size
 	}
 };
 
+//returns sign of the value
 template <typename T>
 int sign(T val) {
 	return (T(0) < val) - (T(0) > val);

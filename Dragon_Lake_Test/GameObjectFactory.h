@@ -13,6 +13,10 @@ struct Point;
 
 #include <memory>
 
+
+/*
+Creates game objects. Factory :)
+*/
 class GameObjectFactory
 {
 public:

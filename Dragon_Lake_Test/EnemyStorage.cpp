@@ -19,6 +19,14 @@ void EnemyStorage::clear() {
 	cont.clear();
 }
 
+std::size_t EnemyStorage::size() const {
+	return cont.size();
+}
+
+bool EnemyStorage::empty() const {
+	return cont.empty();
+}
+
 auto EnemyStorage::begin() -> iterator {
 	return cont.begin();
 }

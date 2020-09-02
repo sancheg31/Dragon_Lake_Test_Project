@@ -15,6 +15,10 @@ class EnemyObject;
 
 class EnemyStorage;
 
+
+/*
+Represents how enemies advance towards the player
+*/
 class EnemyAdvancePolicy
 {
 
