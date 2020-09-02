@@ -16,9 +16,12 @@
 GameObjectFactory::GameObjectFactory(std::shared_ptr<MapArea> marea, std::shared_ptr<ScreenArea> sarea): 
 	mapArea(marea), screenArea(sarea) { }
 
-EnemyObject* GameObjectFactory::createEnemyObject(Point position) const {
+EnemyObject* GameObjectFactory::createEnemyObject(Point position, GameObject* target) const {
 	auto enemy = new EnemyObject(mapArea, screenArea);
 	enemy->setPosition(position);
+	auto traj = new LinearTrajectoryGenerator;
+	traj->setSegment(enemy->mapPosition(), Rectangle{ *target }.center());
+	enemy->setTrajectory(traj);
 	return enemy;
 }
 
