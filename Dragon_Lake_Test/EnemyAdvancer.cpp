@@ -17,7 +17,6 @@ EnemyAdvancer::EnemyAdvancer(PlayerObject* pl, std::list<EnemyObject*> obj) : pl
 		enemy->setTrajectory(trajectory);
 		return ExEnemyObject{ enemy, DirectionState(left), DirectionState(right) };
 	});
-
 }
 
 void EnemyAdvancer::advance() {
@@ -35,6 +34,15 @@ void EnemyAdvancer::advance() {
 		bool accepted = false;
 		bool leftStateActive = true, rightStateActive = false;
 		DirectionState currentState = iter->leftState;
+
+		
+		/*{
+			//output
+			auto [x1, y1] = iter->leftState.currentDirection();
+			auto [x2, y2] = iter->rightState.currentDirection();
+			std::cout << "leftState: " << x1 << " " << y1 << '\n';
+			std::cout << "rightState: " << x2 << " " << y2 << '\n';
+		}*/
 
 		while (!accepted) {
 
@@ -66,21 +74,40 @@ void EnemyAdvancer::advance() {
 			else {
 				exEnemy.leftState = currentState;
 			}
+
+			/*{
+				//output
+				auto [x, y] = exEnemy.enemy->mapPosition();
+				std::cout << "For point " << x << " " << y << ":\n";
+				std::cout << std::boolalpha << '\t' << leftStateActive << " " << rightStateActive << '\n';
+			}*/
+
 		}
 
 	}
 
-	for (auto iter = objects.begin(); iter != objects.end(); ) {
+	for (auto iter = objects.begin(); iter != objects.end(); ++iter) {
 		auto exEnemy = *iter;
 		if (exEnemy.leftState.currentDirection() == exEnemy.enemy->next()) {
 			exEnemy.enemy->advance();
 		}
 		else {
 			auto [enemy, dir, junk] = exEnemy;
+
+			{
+				//output
+				auto [x, y] = enemy->mapPosition();
+				std::cout << "For point " << x << " " << y << " new direction is: ";
+				auto [px, py] = dir.currentDirection();
+				std::cout << px << " " << py << "\n\n";
+			}
+
 			auto traj = enemy->removeTrajectory();
 			enemy->move(dir.currentDirection());
 			traj->setSegment(objectCenter(enemy), objectCenter(player));
 			enemy->setTrajectory(traj);
+
+
 		}
 	}
 

@@ -20,7 +20,7 @@ EnemyObject* GameObjectFactory::createEnemyObject(Point position, GameObject* ta
 	auto enemy = new EnemyObject(mapArea, screenArea);
 	enemy->setPosition(position);
 	auto traj = new LinearTrajectoryGenerator;
-	traj->setSegment(enemy->mapPosition(), Rectangle{ *target }.center());
+	traj->setSegment(Rectangle{ *enemy }.center(), Rectangle{ *target }.center());
 	enemy->setTrajectory(traj);
 	return enemy;
 }

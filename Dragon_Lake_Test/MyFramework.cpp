@@ -41,6 +41,9 @@ bool MyFramework::Init() {
 	
 	enemySpawner = new EnemySpawner(objectFactory, mapArea->size() - CSpriteFactory::spriteSize("enemy"));
 	enemySpawner->addProhibitZone(playerObject, 4);
+
+	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 20, 20 }, playerObject));
+	enemyObjects.push_back(objectFactory->createEnemyObject(Point{ 56, 20 }, playerObject));
 	
 	//enemyObjects = enemySpawner->generate(playerObject, 20);
 
