@@ -138,7 +138,7 @@ void GameEngine::onMouseMove(int x, int y, int xrelative, int yrelative) {
 
 void GameEngine::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
-	if (!isReleased) {
+	if (!isReleased && button == FRMouseButton::LEFT) {
 
 		auto bulletSize = (Point)CSpriteFactory::spriteSize("bullet");
 
