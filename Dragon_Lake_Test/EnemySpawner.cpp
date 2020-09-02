@@ -1,4 +1,7 @@
+
 #include "EnemySpawner.h"
+
+#include "EnemyStorage.h"
 
 EnemySpawner::EnemySpawner(std::shared_ptr<GameObjectFactory> factory, Size dims) :
 	objectFactory(factory), dimensions(dims) { }
@@ -14,10 +17,10 @@ void EnemySpawner::removeProhibitZone(GameObject* object) {
 	prohibits.erase(iter);
 }
 
-std::list<EnemyObject*> EnemySpawner::generate(PlayerObject* player, int amount) {
+EnemyStorage EnemySpawner::generate(PlayerObject* player, int amount) {
 	
 	int counter = 0;
-	std::list<EnemyObject*> objects;
+	EnemyStorage objects;
 
 	std::random_device rd;
 	std::default_random_engine engine(rd());
@@ -33,7 +36,7 @@ std::list<EnemyObject*> EnemySpawner::generate(PlayerObject* player, int amount)
 		trajectory->setSegment(enemy->mapPosition(), centerPoint(player));
 		enemy->setTrajectory(trajectory);
 
-		objects.push_back(enemy);
+		objects.addEnemy(enemy);
 		addProhibitZone(enemy, 1.0);
 		//std::cout << "enemy number " << counter++ << "is generated\n";
 	}

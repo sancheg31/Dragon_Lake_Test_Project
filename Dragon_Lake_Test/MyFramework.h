@@ -6,6 +6,7 @@
 #include <Framework.h>
 
 #include "BulletStorage.h"
+#include "EnemyStorage.h"
 
 class EnemyStorage;
 
@@ -62,7 +63,7 @@ private:
 
 	int enemyCount;
 
-	std::list<EnemyObject*> enemyObjects;
+	EnemyStorage enemyObjects;
 	BulletStorage bulletObjects;
 };
 

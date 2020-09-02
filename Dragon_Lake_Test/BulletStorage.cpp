@@ -27,6 +27,7 @@ void BulletStorage::removeFirstN(std::size_t n) {
 }
 
 auto BulletStorage::erase(iterator iter) -> iterator {
+	delete *iter;
 	return cont.erase(iter);
 }
 

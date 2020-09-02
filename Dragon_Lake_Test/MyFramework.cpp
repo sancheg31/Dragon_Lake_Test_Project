@@ -62,9 +62,6 @@ void MyFramework::Close() {
 
 	CSpriteFactory::releaseResources();
 	bulletObjects.clear();
-
-	for (auto& enemy : enemyObjects)
-		delete enemy;
 	enemyObjects.clear();
 }
 
@@ -88,7 +85,6 @@ bool MyFramework::Tick() {
 			Rectangle enemyRect{ *iter2 };
 			if (bulletRect.isCollide(enemyRect) || enemyRect.isCollide(bulletRect)) {
 				isCollided = true;
-				delete *iter2;
 				iter2 = enemyObjects.erase(iter2);
 			}
 			else {
@@ -97,7 +93,6 @@ bool MyFramework::Tick() {
 		}
 
 		if (isCollided) {
-			delete *iter;
 			iter = bulletObjects.erase(iter);
 		}
 		else {

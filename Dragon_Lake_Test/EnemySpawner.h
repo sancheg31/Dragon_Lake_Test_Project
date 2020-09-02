@@ -13,6 +13,8 @@
 
 #include "LinearTrajectoryGenerator.h"
 
+class EnemyStorage;
+
 class EnemySpawner
 {
 	using container_type = std::list<std::pair<GameObject*, double>>;
@@ -28,7 +30,7 @@ public:
 	void addProhibitZone(GameObject* object, double threshold);
 	void removeProhibitZone(GameObject* object);
 
-	virtual std::list<EnemyObject*> generate(PlayerObject* player, int amount);
+	virtual EnemyStorage generate(PlayerObject* player, int amount);
 
 private:
 

@@ -75,6 +75,9 @@
     <ClCompile Include="EnemyAdvancePolicy.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyStorage.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletObject.h">
@@ -135,6 +138,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="EnemyAdvancePolicy.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyStorage.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

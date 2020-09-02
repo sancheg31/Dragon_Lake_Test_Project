@@ -31,6 +31,7 @@
     <ClCompile Include="EnemyAdvancePolicy.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
+    <ClCompile Include="EnemyStorage.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="MapArea.cpp" />
@@ -52,6 +53,7 @@
     <ClInclude Include="EnemyAdvancePolicy.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="EnemySpawner.h" />
+    <ClInclude Include="EnemyStorage.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="MapArea.h" />
